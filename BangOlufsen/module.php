@@ -77,6 +77,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         $id = $this->__CreateVariable("Status", 3, "", "BOStatus", $this->InstanceID);
         $id = $this->__CreateVariable("Source", 3, "", "BOSource", $this->InstanceID);
         $id = $this->__CreateVariable("Status", 3, "", "BOStatus", $this->InstanceID);
+        $id = $this->__CreateVariable("Volume", 1, 0, "BOVolume", $this->InstanceID);
         $id = $this->__CreateVariable("Song", 3, "", "BOSong", $this->InstanceID);
         $id = $this->__CreateVariable("Artiest", 3, "", "BOArtist", $this->InstanceID);
 
@@ -141,25 +142,25 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
     public function ReceiveData($JSONString)
     {
         $data = json_decode($JSONString);
-        $this->SendDebug(__FUNCTION__, "RAW: ".print_r($data->Buffer, true),0);
+        //$this->SendDebug(__FUNCTION__, "RAW: ".print_r($data->Buffer, true),0);
 
         if (strlen($this->Buffer)>0) 
         {
             $data->Buffer=$this->Buffer.$data->Buffer;
             $this->Buffer="";
-            $this->SendDebug(__FUNCTION__, "append buffer -> ".strlen($data->Buffer),0);
+           // $this->SendDebug(__FUNCTION__, "append buffer -> ".strlen($data->Buffer),0);
         }
-        $this->SendDebug(__FUNCTION__, "Last: ".ord(substr($data->Buffer,-1)),0);
+        //$this->SendDebug(__FUNCTION__, "Last: ".ord(substr($data->Buffer,-1)),0);
         
 
         if ( ord(substr($data->Buffer,-1))==10 )
         {
-            $this->SendDebug(__FUNCTION__, "FULL: ".print_r($data->Buffer, true),0);
+           // $this->SendDebug(__FUNCTION__, "FULL: ".print_r($data->Buffer, true),0);
         }
         else
         {
             $this->Buffer=$data->Buffer;
-            $this->SendDebug(__FUNCTION__, "full buffer",0);
+            //$this->SendDebug(__FUNCTION__, "full buffer",0);
             return;
             
         }
@@ -180,18 +181,29 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
                 switch($command["notification"]["type"])
                 {
                     case "SOURCE":
-                        $this->__setNewValue("BOSource",$command["notification"]["data"]["primaryExperience"]["source"]["friendlyName"]);
-                        $this->SendDebug(__FUNCTION__, "SOURCE: ".$command["notification"]["data"]["primaryExperience"]["source"]["friendlyName"],0);
-                        break;
+                        if (@count($command["notification"]["data"])>0)
+                            $this->__setNewValue("BOSource",$command["notification"]["data"]["primaryExperience"]["source"]["friendlyName"]);
+                        else    
+                            $this->__setNewValue("BOSource","-");
+                            break;
                     case "NOW_PLAYING_STORED_MUSIC":
-                        $this->SendDebug(__FUNCTION__, "MUSIC: ".$command["notification"]["data"]["name"],0);
-                       
-                        $this->__setNewValue("BOSong",$command["notification"]["data"]["name"]);
-                        $this->__setNewValue("BOArtist",$command["notification"]["data"]["artist"]);
-
+                        if (@count($command["notification"]["data"])>0)
+                        {
+                            $this->__setNewValue("BOSong",$command["notification"]["data"]["name"]);
+                            $this->__setNewValue("BOArtist",$command["notification"]["data"]["artist"]);
+                        }
+                        else
+                        {
+                            $this->__setNewValue("BOSong","");
+                            $this->__setNewValue("BOArtist","");
+                        }
                         break;
                     case "PROGRESS_INFORMATION";
                         $this->__setNewValue("BOStatus",$command["notification"]["data"]["state"]);
+                        break;
+                    case "VOLUME":
+                        $this->__setNewValue("BOVolume",$command["notification"]["data"]["speaker"]["level"]);
+                        break;
 
                 }
 
