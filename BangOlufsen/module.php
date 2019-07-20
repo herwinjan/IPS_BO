@@ -62,6 +62,13 @@ class BangOlufsenDevice extends IPSModule
         $this->RegisterMessage(0, 10100);  
         $this->RegisterMessage($this->InstanceID, 11101);
         $this->RegisterMessage($this->InstanceID,11102); 
+        $ParentID = $this->GetParentID();
+        $this->RegisterMessage($ParentID, 10505);
+        $this->RegisterMessage($ParentID, 11101);
+        $this->RegisterMessage($ParentID,11102); 
+        $this->RegisterMessage($ParentID,IM_CONNECT); 
+
+
            
     }
 
