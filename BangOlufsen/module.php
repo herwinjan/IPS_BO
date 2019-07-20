@@ -41,7 +41,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         parent::__construct($InstanceID);
         
         //You can add custom code below.
-        $this->State=10;
+        $this->State=15;
         
     }
 
