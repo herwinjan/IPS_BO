@@ -1,0 +1,11 @@
+{
+    "id" :  "{F77AF98D-ADA6-42AA-ABDB-D1FDC40501E7}" ,
+    "name" :  "BangOlufsenDevice" ,
+    "type" :  3,
+    "vendor" :  "HJ Steehouwer" ,
+    "aliases": ["Bang & Olufsen"],
+    "parentRequirements" :  [ "{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}" ] ,
+    "childRequirements" :  [] ,
+    "implemented" :  [ "{018EF6B5-AB94-40C6-AA53-46943E824ACF}" ] ,
+    "prefix" : "BO"
+}
