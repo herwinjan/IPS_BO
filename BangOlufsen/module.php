@@ -200,10 +200,12 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         ));
         if ($type=="POST") curl_setopt($ch, CURLOPT_POST, true);
         if ($type=="PUT") { 
+
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
             curl_setopt($ch, CURLOPT_POSTFIELDS,http_build_query($data));
         }
         $file_content = curl_exec($ch);
+        $this->SendDebug(__FUNCTION__,"CURL ".$file_content,0);
         curl_close($ch);
     }
 
