@@ -8,10 +8,10 @@
 class BangOlufsenDevice extends IPSModule
 {
     public $Counter;
-    
+
     public function Create()
     {
-        // Do not delete this row.
+        // Diese Zeile nicht löschen
         parent::Create();
 
         $id = $this->__CreateVariable("Status", 3, 0, "BOStatus", $this->InstanceID);
@@ -25,7 +25,9 @@ class BangOlufsenDevice extends IPSModule
 
    public function ApplyChanges()
     {
+        // Diese Zeile nicht löschen
         parent::ApplyChanges();
+        
         $this->Counter=2;
         $this->test="Hallo!";
 
