@@ -172,15 +172,10 @@ if (!defined("vtBoolean")) { //Nur wenn Konstanten noch nicht bekannt sind.
 
 
 /**
- * WebsocketClient Klasse implementiert das Websocket Protokoll als HTTP-Client
- * Erweitert IPSModule.
- *
- * @package BangOlufsenDevice 
- * @property int $count
+ * @property int $Counter
  */
 class BangOlufsenDevice extends IPSModule
 {
-
 
     public function Create()
     {
@@ -216,7 +211,7 @@ class BangOlufsenDevice extends IPSModule
         $this->RegisterMessage($data['ConnectionID'], IM_CHANGESTATUS);
         
         parent::ApplyChanges();
-        $this->count=0;
+        $this->Counter=0;
     }
 
     public function RequestAction($ident, $value)
@@ -246,7 +241,7 @@ class BangOlufsenDevice extends IPSModule
     {
         $data = json_decode($JSONString);
         $this->SendDebug(__FUNCTION__, "RAW: ".print_r($data->Buffer, true),0);
-        $this->count=$this->count+1;
+        $this->Counter=$this->Counter+1;
         $this->SendDebug(__FUNCTION__, "COunt: ".$this->count,0);
         $js=explode("\n",$data->Buffer);
         foreach ( $js as $j)
