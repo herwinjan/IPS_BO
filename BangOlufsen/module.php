@@ -180,7 +180,7 @@ if (!defined("vtBoolean")) { //Nur wenn Konstanten noch nicht bekannt sind.
  */
 class BangOlufsenDevice extends IPSModule
 {
-    private $_count=0;
+    public $count=0;
 
     public function Create()
     {
@@ -253,8 +253,8 @@ class BangOlufsenDevice extends IPSModule
     {
         $data = json_decode($JSONString);
         $this->SendDebug(__FUNCTION__, "RAW: ".print_r($data->Buffer, true),0);
-        $this->_count++;
-        $this->SendDebug(__FUNCTION__, "COunt: ".$this->_count,0);
+        $this->count++;
+        $this->SendDebug(__FUNCTION__, "COunt: ".$this->count,0);
         $js=explode("\n",$data->Buffer);
         foreach ( $js as $j)
         {
