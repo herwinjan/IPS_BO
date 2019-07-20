@@ -177,9 +177,7 @@ if (!defined("vtBoolean")) { //Nur wenn Konstanten noch nicht bekannt sind.
  */
 class BangOlufsenDevice extends IPSModule
 {
-    public $Counter;
-    private $test;
-
+    
     public function Create()
     {
         // Do not delete this row.
@@ -192,12 +190,14 @@ class BangOlufsenDevice extends IPSModule
         $id = $this->__CreateVariable("Artiest", 3, 0, "BOArtist", $this->InstanceID);
 
         $this->RequireParent("{3CFF0FD9-E306-41DB-9B5A-9D06D38576C3}");
-        $this->Counter=1;
-        $this->test="Ok";
     }
 
    public function ApplyChanges()
     {
+        parent::ApplyChanges();
+        $this->Counter=2;
+        $this->test="Hallo!";
+        
         if ((float) IPS_GetKernelVersion() < 4.2) {
             $this->RegisterMessage(0, IPS_KERNELMESSAGE);
         } else {
@@ -214,9 +214,7 @@ class BangOlufsenDevice extends IPSModule
         $this->RegisterMessage($data['ConnectionID'], IM_DISCONNECT);
         $this->RegisterMessage($data['ConnectionID'], IM_CHANGESTATUS);
         
-        parent::ApplyChanges();
-        $this->Counter=2;
-        $this->test="Hallo!";
+
     }
 
     public function RequestAction($ident, $value)
