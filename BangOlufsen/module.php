@@ -1,13 +1,35 @@
 <?php
 
+/*
+ * @addtogroup BangOlufsen
+ * @{
+ *
+ * @package       BangOlufsen
+ * @file          module.php
+ * @author        Michael Tröger <micha@nall-chan.net>
+ * @copyright     2016 Michael Tröger
+ * @license       https://creativecommons.org/licenses/by-nc-sa/4.0/ CC BY-NC-SA 4.0
+ * @version       2.0
+ *
+ */
+
 /**
- * @property bool $ReceiveEncrypted
- * @property string $Buffer
- * @property int $Counter
+ * NoTrigger Klasse für die die Überwachung einer Variable auf fehlende Änderung/Aktualisierung.
+ * Erweitert BangOlufsenDevice.
+ *
+ * @package       BangOlufsen
+ * @author        Michael Tröger <micha@nall-chan.net>
+ * @copyright     2016 Michael Tröger
+ * @license       https://creativecommons.org/licenses/by-nc-sa/4.0/ CC BY-NC-SA 4.0
+ * @version       2.0
+ * @example <b>Ohne</b>
+ *
+ * @property int $State Letzer Zustand
+ * @property int $VarId ID der überwachten Variable
  */
 class BangOlufsenDevice extends IPSModule
 {
-    public $Counter;
+
 
     public function Create()
     {
@@ -22,7 +44,7 @@ class BangOlufsenDevice extends IPSModule
 
         $this->RequireParent("{3CFF0FD9-E306-41DB-9B5A-9D06D38576C3}");
 
-        $this->RegisterPropertyInteger("Counter", 0);
+        $this->State=10;
     }
 
    public function ApplyChanges()
@@ -82,9 +104,8 @@ class BangOlufsenDevice extends IPSModule
     {
         $data = json_decode($JSONString);
         $this->SendDebug(__FUNCTION__, "RAW: ".print_r($data->Buffer, true),0);
-        $c=$this->ReadPropertyInteger("Counter")+1;
-        $this->WritePropertyInteger("Counter",$c);
-        $this->SendDebug(__FUNCTION__, "COunt: ".$c,0);
+        $this->State++;
+        $this->SendDebug(__FUNCTION__, "COunt: ".$this->State,0);
         $js=explode("\n",$data->Buffer);
         foreach ( $js as $j)
         {
