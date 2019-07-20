@@ -156,15 +156,28 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
             case "BOStatus":
                 switch($value)
                 {
+                    case 0: // prev
+                    $this->__sendCommand("BeoZone/Zone/Stream/Backward","");
+                    $this->__sendCommand("BeoZone/Zone/Stream/Backward/Release","");
+                    break;
+             
                     case 1: // play
                         $this->__sendCommand("BeoZone/Zone/Stream/Play","");
+                        $this->__sendCommand("BeoZone/Zone/Stream/Play/Release","");
                         break;
                     case 2: // pause
                         $this->__sendCommand("BeoZone/Zone/Stream/Pause","");
+                        $this->__sendCommand("BeoZone/Zone/Stream/Pause/Release","");
                         break;
                     case 3: // stop
-                        $this->__sendCommand("BeoZone/Zone/Stream/Pause","");
+                        $this->__sendCommand("BeoZone/Zone/Stream/Stop","");
+                        $this->__sendCommand("BeoZone/Zone/Stream/Stop/Release","");
                         break;
+                        case 4: // next
+                        $this->__sendCommand("BeoZone/Zone/Stream/Forward","");
+                        $this->__sendCommand("BeoZone/Zone/Stream/Forward/Release","");
+                        break;
+                 
                 }
 
             break;
@@ -275,6 +288,9 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
                             $this->__setNewValue("BOArtist","");
                         }
                         break;
+                    case "NUMBER_AND_NAME":
+                        $this->__setNewValue("BOSong",$command["notification"]["data"]["name"]);
+                    break;
                     case "PROGRESS_INFORMATION";
                         $this->__setStatus($command["notification"]["data"]["state"]);
                         $pos=$command["notification"]["data"]["position"];
@@ -291,9 +307,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
                         $this->VolumeMax=$max;
                                                
                         $new=round(($level - $min) * 100) / ($max - $min);
-                        
-                        $this->SendDebug(__FUNCTION__, "VOLUME (( $level - $min ) * 100)/ ($max - $min) = $new",0);
-                        
+                                                 
                         $this->__setNewValue("BOVolume",$new);
                         break;
 
