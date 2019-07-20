@@ -172,13 +172,14 @@ if (!defined("vtBoolean")) { //Nur wenn Konstanten noch nicht bekannt sind.
 /**
  * @property bool $ReceiveEncrypted
  * @property string $Buffer
- * @property string $Seed
+ * @property string $test
  * @property int $Counter
  */
 class BangOlufsenDevice extends IPSModule
 {
 
     public $Counter = 0;
+    public $test="Halle";
 
     public function Create()
     {
@@ -193,6 +194,7 @@ class BangOlufsenDevice extends IPSModule
 
         $this->RequireParent("{3CFF0FD9-E306-41DB-9B5A-9D06D38576C3}");
         $this->Counter=0;
+        $this->test="Ok";
     }
 
    public function ApplyChanges()
@@ -215,6 +217,7 @@ class BangOlufsenDevice extends IPSModule
         
         parent::ApplyChanges();
         $this->Counter=0;
+        $this->test="Hallo!";
     }
 
     public function RequestAction($ident, $value)
@@ -224,7 +227,9 @@ class BangOlufsenDevice extends IPSModule
 
     public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
     {
-        IPS_LogMessage("BO RECV", $Message); 
+        IPS_LogMessage("BO RECV", $Message);
+        IPS_LogMessage("BO RECV", $this->test);
+         
         $this->SendDebug(__FUNCTION__, "TS: $TimeStamp SenderID " . $SenderID . ' with MessageID ' . $Message . ' Data: ' . print_r($Data, true), 0);
         if ($Message==10505)
         {
