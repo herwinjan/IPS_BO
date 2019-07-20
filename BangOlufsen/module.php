@@ -7,6 +7,7 @@
  */
 class BangOlufsenDevice extends IPSModule
 {
+    public $Counter;
     
     public function Create()
     {
