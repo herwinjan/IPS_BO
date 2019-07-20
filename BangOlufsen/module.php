@@ -34,14 +34,38 @@ class BangOlufsenDeviceBase extends IPSModule
  */
 class BangOlufsenDevice extends BangOlufsenDeviceBase
 {
-    var $_State;
+    
+        /**
+     * Wert einer Eigenschaft aus den InstanceBuffer lesen.
+     *
+     * @access public
+     * @param string $name Propertyname
+     * @return mixed Value of Name
+     */
+    public function __get($name)
+    {
+        return unserialize($this->GetBuffer($name));
+    }
+    /**
+     * Wert einer Eigenschaft in den InstanceBuffer schreiben.
+     *
+     * @access public
+     * @param string $name Propertyname
+     * @param mixed Value of Name
+     */
+    public function __set($name, $value)
+    {
+        $this->SetBuffer($name, serialize($value));
+    }
+
+
     public function __construct($InstanceID)
     {
         //Never delete this line!
         parent::__construct($InstanceID);
         
         //You can add custom code below.
-        $this->_State=15;
+        $this->State=15;
         
     }
 
@@ -50,14 +74,14 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         // Diese Zeile nicht löschen
         parent::Create();
 
-        $id = $this->__CreateVariable("Status", 3, 0, "BOStatus", $this->InstanceID);
-        $id = $this->__CreateVariable("Source", 3, 0, "BOSource", $this->InstanceID);
-        $id = $this->__CreateVariable("Status", 3, 0, "BOStatus", $this->InstanceID);
-        $id = $this->__CreateVariable("Song", 3, 0, "BOSong", $this->InstanceID);
-        $id = $this->__CreateVariable("Artiest", 3, 0, "BOArtist", $this->InstanceID);
+        $id = $this->__CreateVariable("Status", 3, "", "BOStatus", $this->InstanceID);
+        $id = $this->__CreateVariable("Source", 3, "", "BOSource", $this->InstanceID);
+        $id = $this->__CreateVariable("Status", 3, "", "BOStatus", $this->InstanceID);
+        $id = $this->__CreateVariable("Song", 3, "", "BOSong", $this->InstanceID);
+        $id = $this->__CreateVariable("Artiest", 3, "", "BOArtist", $this->InstanceID);
 
         $this->RequireParent("{3CFF0FD9-E306-41DB-9B5A-9D06D38576C3}");   
-        $this->_State=20;    
+        $this->State=20;    
     }
 
    public function ApplyChanges()
@@ -66,7 +90,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         // Diese Zeile nicht löschen
         parent::ApplyChanges();
 
-        $this->_State=10;
+        $this->State=10;
         
 
 
@@ -119,8 +143,8 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
     {
         $data = json_decode($JSONString);
         $this->SendDebug(__FUNCTION__, "RAW: ".print_r($data->Buffer, true),0);
-        $this->_State++;
-        $this->SendDebug(__FUNCTION__, "COunt: ".$this->_State,0);
+        $this->State++;
+        $this->SendDebug(__FUNCTION__, "COunt: ".$this->State,0);
         $js=explode("\n",$data->Buffer);
         foreach ( $js as $j)
         {
