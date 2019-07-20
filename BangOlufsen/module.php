@@ -201,6 +201,9 @@ class BangOlufsenDevice extends IPSModule
         }
         $this->RegisterMessage($this->InstanceID, FM_CONNECT);
         $this->RegisterMessage($this->InstanceID, FM_DISCONNECT);
+        $this->RegisterMessage($this->InstanceID, IM_CHANGESTATUS);
+
+        
 
         parent::ApplyChanges();
     }
@@ -213,6 +216,8 @@ class BangOlufsenDevice extends IPSModule
     public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
     {
         IPS_LogMessage("BO RECV", $Message); 
+        $this->SendDebug(__FUNCTION__, "TS: $TimeStamp SenderID " . $SenderID . ' with MessageID ' . $Message . ' Data: ' . print_r($Data, true), 0);
+        
     }
 
     public function ReceiveData($JSONString)
