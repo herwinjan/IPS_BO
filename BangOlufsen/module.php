@@ -203,6 +203,10 @@ class BangOlufsenDevice extends IPSModule
         $this->RegisterMessage($this->InstanceID, FM_DISCONNECT);
         $this->RegisterMessage($this->InstanceID, IM_CHANGESTATUS);
 
+        $data = IPS_GetInstance($this->InstanceID);
+        $this->SendDebug('ID', $data['ConnectionID'], 0);
+        $this->RegisterMessage($data['ConnectionID'], 10505);
+        
         
 
         parent::ApplyChanges();
