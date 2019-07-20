@@ -286,6 +286,7 @@ class BangOlufsenDevice extends IPSModule
 
     private function __setNewValue($name, $value)
     {
+        $this->SendDebug(__FUNCTION__, "SV: ".$name." -> ".$sid." -> ".$value,0);
         $sid = @IPS_GetObjectIDByIdent($name, $this->InstanceID);
         $this->SendDebug(__FUNCTION__, "SV: ".$name." -> ".$sid." -> ".$value,0);
         if ($sid) SetValue($sid, $value);
