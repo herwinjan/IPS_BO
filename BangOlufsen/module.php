@@ -172,7 +172,6 @@ if (!defined("vtBoolean")) { //Nur wenn Konstanten noch nicht bekannt sind.
 /**
  * @property bool $ReceiveEncrypted
  * @property string $Buffer
- * @property string $test
  * @property int $Counter
  */
 class BangOlufsenDevice extends IPSModule
