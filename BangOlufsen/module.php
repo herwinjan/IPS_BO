@@ -267,14 +267,14 @@ class BangOlufsenDevice extends IPSModule
                 switch($command["notification"]["type"])
                 {
                     case "SOURCE":
-                        __setValue("BOSource",$command["notification"]["data"]["primaryExperience"]["source"]["friendlyName"]);
+                        __setNewValue("BOSource",$command["notification"]["data"]["primaryExperience"]["source"]["friendlyName"]);
                         $this->SendDebug(__FUNCTION__, "SOURCE: ".$command["notification"]["data"]["primaryExperience"]["source"]["friendlyName"],0);
                         break;
                     case "NOW_PLAYING_STORED_MUSIC":
                         $this->SendDebug(__FUNCTION__, "MUSIC: ".$command["notification"]["data"]["name"],0);
                        
-                        __setValue("BOSong",$command["notification"]["data"]["name"]);
-                        __setValue("BOArtist",$command["notification"]["data"]["artist"]);
+                        __setNewValue("BOSong",$command["notification"]["data"]["name"]);
+                        __setNewValue("BOArtist",$command["notification"]["data"]["artist"]);
 
                         break;
                     case "PROGRESS_INFORMATION";
@@ -284,7 +284,7 @@ class BangOlufsenDevice extends IPSModule
         }
     }   
 
-    private function __setValue($name, $value)
+    private function __setNewValue($name, $value)
     {
         $sid = @IPS_GetObjectIDByIdent($name, $this->InstanceID);
         $this->SendDebug(__FUNCTION__, "SV: ".$name." -> ".$sid." -> ".$value,0);
