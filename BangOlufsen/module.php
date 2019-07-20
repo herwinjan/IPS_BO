@@ -186,8 +186,14 @@ class BangOlufsenDevice extends IPSModule
         // Do not delete this row.
         parent::Create();
 
+        $id = $this->__CreateVariable("Status", 3, 0, "BOStatus", $this->InstanceID);
+        $id = $this->__CreateVariable("Source", 3, 0, "BOSource", $this->InstanceID);
+        $id = $this->__CreateVariable("Status", 3, 0, "BOStatus", $this->InstanceID);
+        $id = $this->__CreateVariable("Song", 3, 0, "BOSong", $this->InstanceID);
+        $id = $this->__CreateVariable("Artiest", 3, 0, "BOArtist", $this->InstanceID);
+
         $this->RequireParent("{3CFF0FD9-E306-41DB-9B5A-9D06D38576C3}");
-      
+   
    
     }
 
@@ -252,11 +258,101 @@ class BangOlufsenDevice extends IPSModule
             if (count($command)>0)
             {
                 $this->SendDebug(__FUNCTION__, "JSON: ".print_r($command, true),0);
+                switch($command["noticiation"]["type"])
+                {
+                    case "SOURCE":
+                        __setValue("BOSource",$command["notification"]["data"]["primaryExperience"]["source"]["friendlyName"]);
+                        break;
+                    case "NOW_PLAYING_STORED_MUSIC":
+                        __setValue("BOSong",$command["notification"]["data"]["name"]);
+                        __setValue("BOArtist",$command["notification"]["data"]["artist"]);
+
+                        break;
+                    case "PROGRESS_INFORMATION";
+                }
+
             }
         }
     }   
 
+    private function __setValue($name, $value)
+    {
+        $sid = @IPS_GetObjectIDByIdent($name, $this->InstanceID);
+        SetValue($sid, $value);
+    }
     
+    private function __CreateCategory($Name, $Ident = '', $ParentID = 0)
+    {
+        $RootCategoryID = $this->InstanceID;
+        IPS_LogMessage("Visonic DEBUG", "CreateCategory: ( $Name, $Ident, $ParentID ) \n");
+        if ('' != $Ident) {
+            $CatID = @IPS_GetObjectIDByIdent($Ident, $ParentID);
+            if (false !== $CatID) {
+                $Obj = IPS_GetObject($CatID);
+                if (0 == $Obj['ObjectType']) { // is category?
+                    return $CatID;
+                }
+            }
+        }
+        $CatID = IPS_CreateCategory();
+        IPS_SetName($CatID, $Name);
+        IPS_SetIdent($CatID, $Ident);
+        if (0 == $ParentID) {
+            if (IPS_ObjectExists($RootCategoryID)) {
+                $ParentID = $RootCategoryID;
+            }
+        }
+        IPS_SetParent($CatID, $ParentID);
+        return $CatID;
+    }
 
+    private function __CreateVariable($Name, $Type, $Value, $Ident = '', $ParentID = 0)
+    {
+        IPS_LogMessage("Visonic DEBUG", "CreateVariable: ( $Name, $Type, $Value, $Ident, $ParentID ) \n");
+        if ('' != $Ident) {
+            $VarID = @IPS_GetObjectIDByIdent($Ident, $ParentID);
+            if (false !== $VarID) {
+                $this->__SetVariable($VarID, $Type, $Value);
+                return $VarID;
+            }
+        }
+        $VarID = @IPS_GetObjectIDByName($Name, $ParentID);
+        if (false !== $VarID) { // exists?
+            $Obj = IPS_GetObject($VarID);
+            if (2 == $Obj['ObjectType']) { // is variable?
+                $Var = IPS_GetVariable($VarID);
+                if ($Type == $Var['VariableValue']['ValueType']) {
+                    $this->__SetVariable($VarID, $Type, $Value);
+                    return $VarID;
+                }
+            }
+        }
+        $VarID = IPS_CreateVariable($Type);
+        IPS_SetParent($VarID, $ParentID);
+        IPS_SetName($VarID, $Name);
+        if ('' != $Ident) {
+            IPS_SetIdent($VarID, $Ident);
+        }
+        $this->__SetVariable($VarID, $Type, $Value);
+        return $VarID;
+    }
+
+    private function __SetVariable($VarID, $Type, $Value)
+    {
+        switch ($Type) {
+            case 0: // boolean
+                SetValueBoolean($VarID, $Value);
+                break;
+            case 1: // integer
+                SetValueInteger($VarID, $Value);
+                break;
+            case 2: // float
+                SetValueFloat($VarID, $Value);
+                break;
+            case 3: // string
+                SetValueString($VarID, $Value);
+                break;
+        }
+    }
    
 }
