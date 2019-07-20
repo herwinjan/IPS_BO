@@ -255,15 +255,15 @@ class BangOlufsenDevice extends IPSModule
         $js=explode("\n",utf8_decode($data->Buffer));
         foreach ( $js as $j)
         {
-            $this->SendDebug(__FUNCTION__, "FE: ".trim($j),0);
+            //$this->SendDebug(__FUNCTION__, "FE: ".trim($j),0);
             $command = json_decode(trim($j),TRUE);    
 
             if ($j[0] == '{' )
             {
                 $this->SendDebug(__FUNCTION__, "RAWCOMMAND: ".print_r($command, true),0);
-                $this->SendDebug(__FUNCTION__, "COMMAND: ".$command["noticiation"]["type"],0);
+                $this->SendDebug(__FUNCTION__, "COMMAND: ".$command["notification"]["type"],0);
                 
-                switch($command["noticiation"]["type"])
+                switch($command["notification"]["type"])
                 {
                     case "SOURCE":
                         __setValue("BOSource",$command["notification"]["data"]["primaryExperience"]["source"]["friendlyName"]);
