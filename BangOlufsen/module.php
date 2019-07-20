@@ -254,8 +254,9 @@ class BangOlufsenDevice extends IPSModule
         $js=explode("\n\r",utf8_decode($data->Buffer));
         foreach ( $js as $j)
         {
-            $command = json_decode($j,TRUE);
-            if ($command)
+            $command = json_decode($j,TRUE);    
+
+            if (json_last_error() === JSON_ERROR_NONE) { 
             {
                 $this->SendDebug(__FUNCTION__, "JSON: ".print_r($command, true),0);
                 $this->SendDebug(__FUNCTION__, "COMMAND: ".$command["noticiation"]["type"],0);
