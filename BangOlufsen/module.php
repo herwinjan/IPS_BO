@@ -192,7 +192,7 @@ class BangOlufsenDevice extends IPSModule
         $id = $this->__CreateVariable("Artiest", 3, 0, "BOArtist", $this->InstanceID);
 
         $this->RequireParent("{3CFF0FD9-E306-41DB-9B5A-9D06D38576C3}");
-        $this->Counter=0;
+        $this->Counter=1;
         $this->test="Ok";
     }
 
@@ -215,7 +215,7 @@ class BangOlufsenDevice extends IPSModule
         $this->RegisterMessage($data['ConnectionID'], IM_CHANGESTATUS);
         
         parent::ApplyChanges();
-        $this->Counter=0;
+        $this->Counter=2;
         $this->test="Hallo!";
     }
 
