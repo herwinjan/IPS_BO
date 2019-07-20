@@ -240,7 +240,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
                         break;
                     case "VOLUME":
                         $level=$command["notification"]["data"]["speaker"]["level"];
-                        $min=$command["notification"]["data"]["speaker"]["range"]["minumum"];
+                        $min=$command["notification"]["data"]["speaker"]["range"]["minimum"];
                         $max=$command["notification"]["data"]["speaker"]["range"]["maximum"];
                         $this->VolumeMin=$min;
                         $this->VolumeMax=$max;
