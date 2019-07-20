@@ -152,7 +152,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         $this->SendDebug(__FUNCTION__, "Last: ".ord(substr($data->Buffer,-1)),0);
         
 
-        if ( substr($data->Buffer,-1)=='\n' )
+        if ( ord(substr($data->Buffer,-1))==10 )
         {
             $this->SendDebug(__FUNCTION__, "FULL: ".print_r($data->Buffer, true),0);
         }
