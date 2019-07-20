@@ -176,7 +176,7 @@ if (!defined("vtBoolean")) { //Nur wenn Konstanten noch nicht bekannt sind.
  * Erweitert IPSModule.
  *
  * @package BanfOlufsenDevice 
- * @property integer $count
+ * @property int $count
  */
 class BangOlufsenDevice extends IPSModule
 {
