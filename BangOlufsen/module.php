@@ -244,8 +244,11 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
                         $max=$command["notification"]["data"]["speaker"]["range"]["maximum"];
                         $this->VolumeMin=$min;
                         $this->VolumeMax=$max;
+                                               
+                        $new=round(($level - $min) * 100) / ($max - $min);
                         
-                        $new=(($level - $min) * 100) / ($max - $min);
+                        $this->SendDebug(__FUNCTION__, "VOLUME (( $level - $min ) * 100)/ ($max - $min) = $new",0);
+                        
                         $this->__setNewValue("BOVolume",$new);
                         break;
 
