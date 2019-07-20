@@ -60,8 +60,8 @@ class BangOlufsenDevice extends IPSModule
     public function ApplyChanges()
     {
         $this->RegisterMessage(0, 10100);  
-        $this->RegisterMessage($data->InstanceID, 11101);
-        $this->RegisterMessage($data->InstanceID, 11102); 
+        $this->RegisterMessage($this->InstanceID, 11101);
+        $this->RegisterMessage($this->InstanceID,11102); 
            
     }
 
