@@ -34,6 +34,17 @@ class BangOlufsenDeviceBase extends IPSModule
  */
 class BangOlufsenDevice extends BangOlufsenDeviceBase
 {
+    private $State;
+    public function __construct($InstanceID)
+    {
+        //Never delete this line!
+        parent::__construct($InstanceID);
+        
+        //You can add custom code below.
+        $this->State=10;
+        
+    }
+
     public function Create()
     {
         // Diese Zeile nicht löschen
