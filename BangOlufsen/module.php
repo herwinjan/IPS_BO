@@ -27,7 +27,7 @@ class BangOlufsenDevice extends IPSModule
     {
         // Diese Zeile nicht löschen
         parent::ApplyChanges();
-        
+
         $this->Counter=2;
         $this->test="Hallo!";
 
@@ -44,6 +44,9 @@ class BangOlufsenDevice extends IPSModule
         $this->RegisterMessage($data['ConnectionID'], 10505);
        // $this->RegisterMessage($data['ConnectionID'], IM_DISCONNECT);
        // $this->RegisterMessage($data['ConnectionID'], IM_CHANGESTATUS);
+
+       $this->RegisterPropertyInteger("Counter", 0);
+
         
 
     }
@@ -77,8 +80,9 @@ class BangOlufsenDevice extends IPSModule
     {
         $data = json_decode($JSONString);
         $this->SendDebug(__FUNCTION__, "RAW: ".print_r($data->Buffer, true),0);
-        $this->Counter=$this->Counter+1;
-        $this->SendDebug(__FUNCTION__, "COunt: ".$this->Counter,0);
+        $c=$this->ReadPropertyInteger("Counter")+1;
+        $this->WritePropertyInteger("Counter",$c);
+        $this->SendDebug(__FUNCTION__, "COunt: ".$c,0);
         $js=explode("\n",$data->Buffer);
         foreach ( $js as $j)
         {
