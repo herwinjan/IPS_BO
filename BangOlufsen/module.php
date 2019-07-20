@@ -65,7 +65,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         parent::__construct($InstanceID);
         
         //You can add custom code below.
-        $this->State=15;
+        
         
     }
 
@@ -81,7 +81,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         $id = $this->__CreateVariable("Artiest", 3, "", "BOArtist", $this->InstanceID);
 
         $this->RequireParent("{3CFF0FD9-E306-41DB-9B5A-9D06D38576C3}");   
-        $this->State=20;    
+           
     }
 
    public function ApplyChanges()
