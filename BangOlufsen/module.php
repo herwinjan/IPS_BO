@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 if (!defined("IPS_BASE")) {
     // --- BASE MESSAGE
@@ -176,9 +177,8 @@ if (!defined("vtBoolean")) { //Nur wenn Konstanten noch nicht bekannt sind.
  */
 class BangOlufsenDevice extends IPSModule
 {
-
-    public $Counter = 0;
-    public $test="Halle";
+    public $Counter;
+    private $test;
 
     public function Create()
     {
@@ -256,7 +256,7 @@ class BangOlufsenDevice extends IPSModule
             if (strlen(trim($j))<=1) continue;
             //$this->SendDebug(__FUNCTION__, "FE: ".trim($j),0);
             $command = json_decode(trim(utf8_decode($j)),TRUE);   
-            IPS_LogMessage("BO RECV", $this->test); 
+            
 
             if ($j[0] == '{' )
             {
