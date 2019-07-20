@@ -178,7 +178,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
     {
         $ch = curl_init();
         $timeout = 5;
-        curl_setopt($ch, CURLOPT_URL, "http://".$this->ReadPropertyString('IP').":".$this->ReadPropertyString('Port')."/". $url);
+        curl_setopt($ch, CURLOPT_URL, "http://".$this->ReadPropertyString('IP').":".$this->ReadPropertyInteger('Port')."/". $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
         curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US) AppleWebKit/525.13 (KHTML, like Gecko) Chrome/0.A.B.C Safari/525.13');
