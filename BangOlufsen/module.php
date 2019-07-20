@@ -50,10 +50,7 @@ class BangOlufsenDevice extends IPSModule
         $this->ConnectParent("{3CFF0FD9-E306-41DB-9B5A-9D06D38576C3}");
 
         $this->RegisterMessage(0, IPS_KERNELSTARTED);
-        $this->RegisterMessage($this->InstanceID, IM_CONNECT);
-        $this->RegisterMessage($this->InstanceID, IM_DISCONNECT);  
-        $this->RegisterMessage($this->InstanceID, FM_CONNECT);
-        $this->RegisterMessage($this->InstanceID, FM_DISCONNECT);  
+       
 
         
         return true;
@@ -62,7 +59,10 @@ class BangOlufsenDevice extends IPSModule
     
     public function ApplyChanges()
     {
-       
+        $this->RegisterMessage(0, 10100);  
+        $this->RegisterMessage($data->InstanceID, 11101);
+        $this->RegisterMessage($data->InstanceID, 11102); 
+           
     }
 
     public function RequestAction($ident, $value)
