@@ -225,7 +225,21 @@ class BangOlufsenDevice extends IPSModule
     {
         IPS_LogMessage("BO RECV", $Message); 
         $this->SendDebug(__FUNCTION__, "TS: $TimeStamp SenderID " . $SenderID . ' with MessageID ' . $Message . ' Data: ' . print_r($Data, true), 0);
-        
+        if ($Message==10505)
+        {
+            if ($Data[0]==102)
+            {
+                $sendData="GET /BeoNotify/Notifications?list=recursive+features HTTP/1.1\n".
+                "User-Agent: Mozilla/4.0 (compatible; MSIE5.01; Windows NT)\n".
+                "Host: 192.168.11.167\n".
+                "Accept-Language: en-us\n".
+                "Connection: Keep-Alive\n\n";
+                $JSON['DataID'] = '{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}';
+                $JSON['Buffer'] = utf8_encode($SendData);
+                $JsonString = json_encode($JSON);
+                $this->SendDataToParent($JsonString);
+            }
+        }
     }
 
     public function ReceiveData($JSONString)
