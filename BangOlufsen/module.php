@@ -30,7 +30,7 @@ class BangOlufsenDeviceBase extends IPSModule
  * @example <b>None</b>
  *
  * @property int $State Letzer Zustand
- * @property int $VarId ID der überwachten Variable
+ * @property string $Buffer ID der überwachten Variable
  */
 class BangOlufsenDevice extends BangOlufsenDeviceBase
 {
@@ -91,9 +91,8 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         parent::ApplyChanges();
 
         $this->State=10;
+        $this->Buffer="";
         
-
-
         if ((float) IPS_GetKernelVersion() < 4.2) {
             $this->RegisterMessage(0, IPS_KERNELMESSAGE);
         } else {
@@ -143,8 +142,18 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
     {
         $data = json_decode($JSONString);
         $this->SendDebug(__FUNCTION__, "RAW: ".print_r($data->Buffer, true),0);
-        $this->State++;
-        $this->SendDebug(__FUNCTION__, "COunt: ".$this->State,0);
+
+        if (strlen($this->Buffer)>0) 
+        {
+            $data->Buffer+=$this->Buffer;
+            $this->Buffer="";
+        }
+        if (!($data->Buffer[strlen($data->Buffer)-6]=='\r' || $data->Buffer[strlen($data->Buffer)-6]=='\n' ))
+        {
+            $this->Buffer+=$data->Buffer;
+            return;
+        }
+
         $js=explode("\n",$data->Buffer);
         foreach ( $js as $j)
         {
