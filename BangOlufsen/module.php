@@ -80,6 +80,8 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         $id = $this->__CreateVariable("Volume", 1, 0, "BOVolume", $this->InstanceID);
         $id = $this->__CreateVariable("Song", 3, "", "BOSong", $this->InstanceID);
         $id = $this->__CreateVariable("Artiest", 3, "", "BOArtist", $this->InstanceID);
+        $id = $this->__CreateVariable("Voorgang", 3, "", "BOLoc", $this->InstanceID);
+        
 
         $this->RegisterPropertyString('IP', '');
         $this->RegisterPropertyInteger('Port', 8080);
@@ -146,6 +148,10 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
                 $JsonString = json_encode($JSON);
                 $this->SendDataToParent($JsonString);
             }
+            if ($Date[0]==200)
+            {
+                $this->__setNewValue("BOStatus","Offline");
+            }
         }
     }
 
@@ -210,6 +216,11 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
                         break;
                     case "PROGRESS_INFORMATION";
                         $this->__setNewValue("BOStatus",$command["notification"]["data"]["state"]);
+                        $pos=$command["notification"]["data"]["position"];
+                        $tot=$command["notification"]["data"]["totalDuration"];
+                        $this->__setNewValue("BOLoc",date('H:i:s',$pos)."/".date('H:i:s',$tot));
+
+                       
                         break;
                     case "VOLUME":
                         $this->__setNewValue("BOVolume",$command["notification"]["data"]["speaker"]["level"]);
