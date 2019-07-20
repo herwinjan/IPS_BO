@@ -145,12 +145,12 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
 
         if (strlen($this->Buffer)>0) 
         {
-            $data->Buffer+=$this->Buffer;
+            $data->Buffer=$this->Buffer+$data->Buffer;
             $this->Buffer="";
         }
         if (!($data->Buffer[strlen($data->Buffer)-6]=='\r' || $data->Buffer[strlen($data->Buffer)-6]=='\n' ))
         {
-            $this->Buffer+=$data->Buffer;
+            $this->Buffer=$data->Buffer;
             return;
         }
 
