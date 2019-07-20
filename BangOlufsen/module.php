@@ -236,11 +236,8 @@ class BangOlufsenDevice extends IPSModule
         {
             if ($Data[0]==102)
             {
-                $sendData="GET /BeoNotify/Notifications?list=recursive+features HTTP/1.1\n".
-                "User-Agent: Mozilla/4.0 (compatible; MSIE5.01; Windows NT)\n".
-                "Host: 192.168.11.167\n".
-                "Accept-Language: en-us\n".
-                "Connection: Keep-Alive\r\n\r\n\r\n";
+                $sendData="GET /BeoNotify/Notifications?list=recursive+features HTTP/1.1\r\n".
+                "Connection: Keep-Alive\r\n\r\n";
                 $JSON['DataID'] = '{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}';
                 $JSON['Buffer'] = utf8_encode($sendData);
                 $JsonString = json_encode($JSON);
@@ -253,7 +250,7 @@ class BangOlufsenDevice extends IPSModule
     {
         $data = json_decode($JSONString);
         $this->SendDebug(__FUNCTION__, "RAW: ".print_r($data->Buffer, true),0);
-        $this->count++;
+        $this->count=$this->count+1;
         $this->SendDebug(__FUNCTION__, "COunt: ".$this->count,0);
         $js=explode("\n",$data->Buffer);
         foreach ( $js as $j)
