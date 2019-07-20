@@ -6,8 +6,8 @@
  *
  * @package       BangOlufsen
  * @file          module.php
- * @author        Michael Tröger <micha@nall-chan.net>
- * @copyright     2016 Michael Tröger
+ * @author        Herwin Jan Steehouwer <herwin@steehouwer.nu>
+ * @copyright     2019 Herwin Jan Steehouwer
  * @license       https://creativecommons.org/licenses/by-nc-sa/4.0/ CC BY-NC-SA 4.0
  * @version       2.0
  *
@@ -18,11 +18,11 @@
  * Erweitert BangOlufsenDevice.
  *
  * @package       BangOlufsen
- * @author        Michael Tröger <micha@nall-chan.net>
- * @copyright     2016 Michael Tröger
+ * @author        Herwin Jan Steehouwer <herwin@steehouwer.nu>
+ * @copyright     2019 Herwin Jan Steehouwer
  * @license       https://creativecommons.org/licenses/by-nc-sa/4.0/ CC BY-NC-SA 4.0
  * @version       2.0
- * @example <b>Ohne</b>
+ * @example <b>None</b>
  *
  * @property int $State Letzer Zustand
  * @property int $VarId ID der überwachten Variable
@@ -223,3 +223,4 @@ class BangOlufsenDevice extends IPSModule
     }
    
 }
+/** @} */
