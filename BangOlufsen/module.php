@@ -13,6 +13,11 @@
  *
  */
 
+class BangOlufsenDeviceBase extends IPSModule
+{
+
+}
+
 /**
  * NoTrigger Klasse für die die Überwachung einer Variable auf fehlende Änderung/Aktualisierung.
  * Erweitert BangOlufsenDevice.
@@ -27,7 +32,7 @@
  * @property int $State Letzer Zustand
  * @property int $VarId ID der überwachten Variable
  */
-class BangOlufsenDevice extends IPSModule
+class BangOlufsenDevice extends BangOlufsenDeviceBase
 {
     public function Create()
     {
@@ -51,6 +56,8 @@ class BangOlufsenDevice extends IPSModule
 
         $this->State=10;
         
+
+
         if ((float) IPS_GetKernelVersion() < 4.2) {
             $this->RegisterMessage(0, IPS_KERNELMESSAGE);
         } else {
