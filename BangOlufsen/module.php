@@ -201,7 +201,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         if ($type=="POST") curl_setopt($ch, CURLOPT_POST, true);
         if ($type=="PUT") { 
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
-            curl_setopt($ch, CURLOPT_POSTFIELDS,http_build_query($data);
+            curl_setopt($ch, CURLOPT_POSTFIELDS,http_build_query($data));
         }
         $file_content = curl_exec($ch);
         curl_close($ch);
@@ -224,7 +224,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
                 $JsonString = json_encode($JSON);
                 $this->SendDataToParent($JsonString);
             }
-            if ($Date[0]==200)
+            if ($Data[0]==200)
             {
                 $this->__setNewValue("BOStatus",3);
 
