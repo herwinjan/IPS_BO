@@ -240,7 +240,7 @@ class BangOlufsenDevice extends IPSModule
                 "User-Agent: Mozilla/4.0 (compatible; MSIE5.01; Windows NT)\n".
                 "Host: 192.168.11.167\n".
                 "Accept-Language: en-us\n".
-                "Connection: Keep-Alive\n\n";
+                "Connection: Keep-Alive\r\n\r\n\r\n";
                 $JSON['DataID'] = '{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}';
                 $JSON['Buffer'] = utf8_encode($sendData);
                 $JsonString = json_encode($JSON);
