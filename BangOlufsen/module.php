@@ -258,7 +258,7 @@ class BangOlufsenDevice extends IPSModule
             $this->SendDebug(__FUNCTION__, "FE: ".trim($j),0);
             $command = json_decode(trim($j),TRUE);    
 
-            if ($command === TRUE )
+            if ($j[0] == '{' )
             {
                 $this->SendDebug(__FUNCTION__, "RAWCOMMAND: ".print_r($command, true),0);
                 $this->SendDebug(__FUNCTION__, "COMMAND: ".$command["noticiation"]["type"],0);
