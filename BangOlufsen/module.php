@@ -255,7 +255,7 @@ class BangOlufsenDevice extends IPSModule
         foreach ( $js as $j)
         {
             $command = json_decode($j,TRUE);
-            if (count($command)>0)
+            if ($command)
             {
                 $this->SendDebug(__FUNCTION__, "JSON: ".print_r($command, true),0);
                 $this->SendDebug(__FUNCTION__, "COMMAND: ".$command["noticiation"]["type"],0);
