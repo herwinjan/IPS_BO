@@ -74,14 +74,25 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         // Diese Zeile nicht löschen
         parent::Create();
 
-        $id = $this->__CreateVariable("Status", 3, "", "BOStatus", $this->InstanceID);
-        $id = $this->__CreateVariable("Source", 3, "", "BOSource", $this->InstanceID);
-        $id = $this->__CreateVariable("Status", 3, "", "BOStatus", $this->InstanceID);
+        $id = $this->__CreateVariable("Status", 1, 0, "BOStatus", $this->InstanceID);
+        IPS_SetVariableCustomProfile($id, "Status.BO");
+        $id = $this->__CreateVariable("Source", 3, "", "BOSource", $this->InstanceID);        
         $id = $this->__CreateVariable("Volume", 1, 0, "BOVolume", $this->InstanceID);
+        IPS_SetVariableCustomProfile($id, "Volume.BO");
         $id = $this->__CreateVariable("Song", 3, "", "BOSong", $this->InstanceID);
         $id = $this->__CreateVariable("Artiest", 3, "", "BOArtist", $this->InstanceID);
         $id = $this->__CreateVariable("Voorgang", 3, "", "BOLoc", $this->InstanceID);
-        
+
+        $this->RegisterProfileIntegerEx("Status.BO", "Information", "", "",   Array( Array(0, "prev",       "", -1),
+                                                                                        Array(1, "play",       "", -1),
+                                                                                        Array(2, "pause",      "", -1),
+                                                                                        Array(3, "stop",       "", -1),
+                                                                                        Array(4, "next",       "", -1)
+                                                                                         ));
+
+        $this->RegisterProfileInteger("Volume.BO",   "Intensity",   "", " %",    0, 100, 1);                                                                               
+        $this->RegisterProfileIntegerEx("Switch.BO", "Information", "",   "", Array( Array(0, "Off", "", 0xFF0000),
+                                                                                        Array(1, "On",  "", 0x00FF00) ));
 
         $this->RegisterPropertyString('IP', '');
         $this->RegisterPropertyInteger('Port', 8080);
@@ -105,6 +116,9 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
 
         $this->State=10;
         $this->Buffer="";
+        $this->VolumeMin=0;
+        $this->VolumeMax=100;
+        
         
         if ((float) IPS_GetKernelVersion() < 4.2) {
             $this->RegisterMessage(0, IPS_KERNELMESSAGE);
@@ -150,7 +164,9 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
             }
             if ($Date[0]==200)
             {
-                $this->__setNewValue("BOStatus","Offline");
+                $this->__setNewValue("BOStatus",3);
+
+                //TODO off status
             }
         }
     }
@@ -215,15 +231,22 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
                         }
                         break;
                     case "PROGRESS_INFORMATION";
-                        $this->__setNewValue("BOStatus",$command["notification"]["data"]["state"]);
+                        $this->__setStatus($command["notification"]["data"]["state"]);
                         $pos=$command["notification"]["data"]["position"];
                         $tot=$command["notification"]["data"]["totalDuration"];
-                        $this->__setNewValue("BOLoc",date('H:i:s',$pos)."/".date('H:i:s',$tot));
+                        $this->__setNewValue("BOLoc",date('i:s',$pos)."/".date('i:s',$tot));
 
                        
                         break;
                     case "VOLUME":
-                        $this->__setNewValue("BOVolume",$command["notification"]["data"]["speaker"]["level"]);
+                        $level=$command["notification"]["data"]["speaker"]["level"];
+                        $min=$command["notification"]["data"]["speaker"]["range"]["minumum"];
+                        $max=$command["notification"]["data"]["speaker"]["range"]["maximum"];
+                        $this->VolumeMin=$min;
+                        $this->VolumeMax=$max;
+                        
+                        $new=(($level - $min) * 100) / ($max - $min);
+                        $this->__setNewValue("BOVolume",$new);
                         break;
 
                 }
@@ -231,6 +254,24 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
             }
         }
     }   
+
+    private function __setStatus($state)
+    {
+        $st=3;
+        switch ($state)
+        {
+            case "stop":
+                $st=3;
+                break;
+                case "pause":
+                $st=2;
+                break;
+                case "play":
+                $st=1;
+                break;
+        }
+        $this->__setNewValue("BOStatus",$st);
+    }
 
     private function __setNewValue($name, $value)
     {
@@ -312,6 +353,38 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
                 break;
         }
     }
+    protected function RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize) {
+        
+        if(!IPS_VariableProfileExists($Name)) {
+            IPS_CreateVariableProfile($Name, 1);
+        } else {
+            $profile = IPS_GetVariableProfile($Name);
+            if($profile['ProfileType'] != 1)
+            throw new Exception("Variable profile type does not match for profile ".$Name);
+        }
+        
+        IPS_SetVariableProfileIcon($Name, $Icon);
+        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
+        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);
+        
+    }
+    protected function RegisterProfileIntegerEx($Name, $Icon, $Prefix, $Suffix, $Associations) {
+        if ( sizeof($Associations) === 0 ){
+            $MinValue = 0;
+            $MaxValue = 0;
+        } else {
+            $MinValue = $Associations[0][0];
+            $MaxValue = $Associations[sizeof($Associations)-1][0];
+        }
+        
+        $this->RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, 0);
+        
+        foreach($Associations as $Association) {
+            IPS_SetVariableProfileAssociation($Name, $Association[0], $Association[1], $Association[2], $Association[3]);
+        }
+        
+    }
+
    
 }
 /** @} */
