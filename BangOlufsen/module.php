@@ -149,7 +149,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
             $this->Buffer="";
             $this->SendDebug(__FUNCTION__, "append buffer",0);
         }
-        if (!($data->Buffer[strlen($data->Buffer)-6]=='\r' || $data->Buffer[strlen($data->Buffer)-6]=='\n' ))
+        if (!($data->Buffer[strlen($data->Buffer)-1]=='\r' || $data->Buffer[strlen($data->Buffer)-1]=='\n' ))
         {
             $this->Buffer=$data->Buffer;
             $this->SendDebug(__FUNCTION__, "full buffer",0);
