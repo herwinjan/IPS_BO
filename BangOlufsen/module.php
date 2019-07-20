@@ -44,17 +44,17 @@ class BangOlufsenDevice extends IPSModule
 
         $this->RequireParent("{3CFF0FD9-E306-41DB-9B5A-9D06D38576C3}");
 
-        $this->State=10;
+        
     }
 
    public function ApplyChanges()
     {
+        $this->State=10;
         // Diese Zeile nicht löschen
         parent::ApplyChanges();
 
-        $this->Counter=2;
-        $this->test="Hallo!";
-
+        $this->State=10;
+        
         if ((float) IPS_GetKernelVersion() < 4.2) {
             $this->RegisterMessage(0, IPS_KERNELMESSAGE);
         } else {
