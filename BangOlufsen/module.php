@@ -2,18 +2,17 @@
 
 if (@constant('IPS_BASE') == null) { //Nur wenn Konstanten noch nicht bekannt sind.
     define('IPS_BASE', 10000); //Base Message
-    define('IPS_DATAMESSAGE', IPS_BASE + 1100); //Data Handler Message
-    define('DM_CONNECT', IPS_DATAMESSAGE + 1); //On Instance Connect
-    define('DM_DISCONNECT', IPS_DATAMESSAGE + 2); //On Instance Disconnect
-    define('IPS_INSTANCEMESSAGE', IPS_BASE + 500); //Instance Manager Message
-    define('IM_CHANGESTATUS', IPS_INSTANCEMESSAGE + 5); //Status was Changed
-    define('IM_CHANGESETTINGS', IPS_INSTANCEMESSAGE + 6); //Settings were Changed
-    define('IPS_VARIABLEMESSAGE', IPS_BASE + 600); //Variable Manager Message
-    define('VM_CREATE', IPS_VARIABLEMESSAGE + 1); //Variable Created
-    define('VM_DELETE', IPS_VARIABLEMESSAGE + 2); //Variable Deleted
-    define('VM_UPDATE', IPS_VARIABLEMESSAGE + 3); //On Variable Update
-    define('VM_CHANGEPROFILENAME', IPS_VARIABLEMESSAGE + 4); //On Profile Name Change
-    define('VM_CHANGEPROFILEACTION', IPS_VARIABLEMESSAGE + 5); //On Profile Action Change
+    define('IPS_INSTANCEMESSAGE', IPS_BASE + 500);         //Instance Manager Message
+    define('IM_CREATE', IPS_INSTANCEMESSAGE + 1);          //Instance created
+    define('IM_DELETE', IPS_INSTANCEMESSAGE + 2);          //Instance deleted
+    define('IM_CONNECT', IPS_INSTANCEMESSAGE + 3);         //Instance connectged
+    define('IM_DISCONNECT', IPS_INSTANCEMESSAGE + 4);      //Instance disconncted
+    define('IM_CHANGESTATUS', IPS_INSTANCEMESSAGE + 5);    //Status was Changed
+    define('IM_CHANGESETTINGS', IPS_INSTANCEMESSAGE + 6);  //Settings were Changed
+    define('IM_CHANGESEARCH', IPS_INSTANCEMESSAGE + 7);    //Searching was started/stopped
+    define('IM_SEARCHUPDATE', IPS_INSTANCEMESSAGE + 8);    //Searching found new results
+    define('IM_SEARCHPROGRESS', IPS_INSTANCEMESSAGE + 9);  //Searching progress in %
+    define('IM_SEARCHCOMPLETE', IPS_INSTANCEMESSAGE + 10); //Searching is complete
 }
 
 
@@ -47,8 +46,8 @@ class BangOlufsenDevice extends IPSModule
         $this->ConnectParent("{3CFF0FD9-E306-41DB-9B5A-9D06D38576C3}");
 
         $this->RegisterMessage(0, IPS_KERNELSTARTED);
-        $this->RegisterMessage($this->InstanceID, DM_CONNECT);
-        $this->RegisterMessage($this->InstanceID, DM_DISCONNECT);  
+        $this->RegisterMessage($this->InstanceID, IM_CONNECT);
+        $this->RegisterMessage($this->InstanceID, IM_DISCONNECT);  
 
         
         return true;
