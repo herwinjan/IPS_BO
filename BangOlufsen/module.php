@@ -255,6 +255,7 @@ class BangOlufsenDevice extends IPSModule
         $js=explode("\n",utf8_decode($data->Buffer));
         foreach ( $js as $j)
         {
+            if (strlen(trim($j))<=1) continue;
             //$this->SendDebug(__FUNCTION__, "FE: ".trim($j),0);
             $command = json_decode(trim($j),TRUE);    
 
@@ -284,7 +285,7 @@ class BangOlufsenDevice extends IPSModule
     private function __setValue($name, $value)
     {
         $sid = @IPS_GetObjectIDByIdent($name, $this->InstanceID);
-        SetValue($sid, $value);
+        if ($sid) SetValue($sid, $value);
     }
     
     private function __CreateCategory($Name, $Ident = '', $ParentID = 0)
