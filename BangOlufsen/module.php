@@ -175,7 +175,7 @@ if (!defined("vtBoolean")) { //Nur wenn Konstanten noch nicht bekannt sind.
  * WebsocketClient Klasse implementiert das Websocket Protokoll als HTTP-Client
  * Erweitert IPSModule.
  *
- * @package BanfOlufsenDevice 
+ * @package BangOlufsenDevice 
  * @property int $count
  */
 class BangOlufsenDevice extends IPSModule
