@@ -149,8 +149,8 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
             $this->Buffer="";
             $this->SendDebug(__FUNCTION__, "append buffer -> ".strlen($data->Buffer),0);
         }
-        $this->SendDebug(__FUNCTION__, "Last: ".ord(ubstr($data->Buffer,-1)));
-        
+        $this->SendDebug(__FUNCTION__, "Last: ".ord(substr($data->Buffer,-1)));
+
         if ( substr($data->Buffer,-1)=='\n' )
         {
             $this->SendDebug(__FUNCTION__, "FULL: ".print_r($data->Buffer, true),0);
