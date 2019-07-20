@@ -89,7 +89,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
     }
     public function GetConfigurationForParent()
     {
-        $JsonArray = array('Host' => $this->ReadPropertyString('IP'), 'Port' => $this->ReadPropertyInteger('Port'), 'Open' => IPS_GetProperty(IPS_GetInstance($this->InstanceID)['ConnectionID'], 'Open'));
+        $JsonArray = array('Host' => $this->ReadPropertyString('IP'), 'Port' => $this->ReadPropertyInteger('Port'));
         $Json = json_encode($JsonArray);
         return $Json;
     }
