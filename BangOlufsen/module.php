@@ -180,7 +180,7 @@ if (!defined("vtBoolean")) { //Nur wenn Konstanten noch nicht bekannt sind.
  */
 class BangOlufsenDevice extends IPSModule
 {
-    public $count=0;
+
 
     public function Create()
     {
@@ -216,11 +216,8 @@ class BangOlufsenDevice extends IPSModule
         $this->RegisterMessage($data['ConnectionID'], IM_DISCONNECT);
         $this->RegisterMessage($data['ConnectionID'], IM_CHANGESTATUS);
         
-
-        
-        
-
         parent::ApplyChanges();
+        $this->count=0;
     }
 
     public function RequestAction($ident, $value)
