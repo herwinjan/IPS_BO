@@ -245,9 +245,12 @@ class BangOlufsenDevice extends IPSModule
     public function ReceiveData($JSONString)
     {
         $data = json_decode($JSONString);
-        $js=utf8_decode($data->Buffer);
-        $command = json_decode($js);
-        $this->SendDebug(__FUNCTION__, "JSON: ".print_r($command, true),0);
+        $js=explode("\n",utf8_decode($data->Buffer));
+        foreach ( $js as $j)
+        {
+            $command = json_decode($j);
+            $this->SendDebug(__FUNCTION__, "JSON: ".print_r($command, true),0);
+        }
     }   
 
     
