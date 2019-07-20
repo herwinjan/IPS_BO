@@ -29,8 +29,6 @@
  */
 class BangOlufsenDevice extends IPSModule
 {
-
-
     public function Create()
     {
         // Diese Zeile nicht löschen
@@ -42,9 +40,7 @@ class BangOlufsenDevice extends IPSModule
         $id = $this->__CreateVariable("Song", 3, 0, "BOSong", $this->InstanceID);
         $id = $this->__CreateVariable("Artiest", 3, 0, "BOArtist", $this->InstanceID);
 
-        $this->RequireParent("{3CFF0FD9-E306-41DB-9B5A-9D06D38576C3}");
-
-        
+        $this->RequireParent("{3CFF0FD9-E306-41DB-9B5A-9D06D38576C3}");        
     }
 
    public function ApplyChanges()
@@ -70,7 +66,7 @@ class BangOlufsenDevice extends IPSModule
        // $this->RegisterMessage($data['ConnectionID'], IM_CHANGESTATUS);
 
        
-
+       parent::ApplyChanges();
         
 
     }
