@@ -2,6 +2,6 @@
 	"elements":
 	[
 		{ "name": "IP", "type": "ValidationTextBox", "caption": "Ip Adress" },
-		{ "name": "Port", "type": "ValidationTextBox", "caption": "Port" }
+		{ "name": "Port", "type": "NumberSpinner", "caption": "Port" }
 	]
 }
