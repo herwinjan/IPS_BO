@@ -278,6 +278,8 @@ class BangOlufsenDevice extends IPSModule
 
                         break;
                     case "PROGRESS_INFORMATION";
+                        $this->__setNewValue("BOStatus",$command["notification"]["data"]["state"]);
+
                 }
 
             }
