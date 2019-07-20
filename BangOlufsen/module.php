@@ -152,7 +152,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
     public function ReceiveData($JSONString)
     {
         $data = json_decode($JSONString);
-        //$this->SendDebug(__FUNCTION__, "RAW: ".print_r($data->Buffer, true),0);
+        $this->SendDebug(__FUNCTION__, "RAW: ".print_r($data->Buffer, true),0);
 
         if (strlen($this->Buffer)>0) 
         {
@@ -186,7 +186,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
             if ($j[0] == '{' )
             {
                 //$this->SendDebug(__FUNCTION__, "RAWCOMMAND: ".print_r($command, true),0);
-                //$this->SendDebug(__FUNCTION__, "COMMAND: ".$command["notification"]["type"],0);
+                $this->SendDebug(__FUNCTION__, "COMMAND: ".$command["notification"]["type"],0);
                 
                 switch($command["notification"]["type"])
                 {
