@@ -175,8 +175,8 @@ if (!defined("vtBoolean")) { //Nur wenn Konstanten noch nicht bekannt sind.
  * WebsocketClient Klasse implementiert das Websocket Protokoll als HTTP-Client
  * Erweitert IPSModule.
  *
- * @package BanfOlufsenDevice
- * @property int $Parent
+ * @package BanfOlufsenDevice 
+ * @property integer $count
  */
 class BangOlufsenDevice extends IPSModule
 {
@@ -194,7 +194,6 @@ class BangOlufsenDevice extends IPSModule
         $id = $this->__CreateVariable("Artiest", 3, 0, "BOArtist", $this->InstanceID);
 
         $this->RequireParent("{3CFF0FD9-E306-41DB-9B5A-9D06D38576C3}");
-   
    
     }
 
