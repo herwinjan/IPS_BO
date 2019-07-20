@@ -255,7 +255,8 @@ class BangOlufsenDevice extends IPSModule
         {
             if (strlen(trim($j))<=1) continue;
             //$this->SendDebug(__FUNCTION__, "FE: ".trim($j),0);
-            $command = json_decode(trim(utf8_decode($j)),TRUE);    
+            $command = json_decode(trim(utf8_decode($j)),TRUE);   
+            IPS_LogMessage("BO RECV", $this->test); 
 
             if ($j[0] == '{' )
             {
