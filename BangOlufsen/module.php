@@ -21,6 +21,8 @@ class BangOlufsenDevice extends IPSModule
         $id = $this->__CreateVariable("Artiest", 3, 0, "BOArtist", $this->InstanceID);
 
         $this->RequireParent("{3CFF0FD9-E306-41DB-9B5A-9D06D38576C3}");
+
+        $this->RegisterPropertyInteger("Counter", 0);
     }
 
    public function ApplyChanges()
@@ -45,7 +47,7 @@ class BangOlufsenDevice extends IPSModule
        // $this->RegisterMessage($data['ConnectionID'], IM_DISCONNECT);
        // $this->RegisterMessage($data['ConnectionID'], IM_CHANGESTATUS);
 
-       $this->RegisterPropertyInteger("Counter", 0);
+       
 
         
 
