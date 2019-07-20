@@ -271,6 +271,8 @@ class BangOlufsenDevice extends IPSModule
                         $this->SendDebug(__FUNCTION__, "SOURCE: ".$command["notification"]["data"]["primaryExperience"]["source"]["friendlyName"],0);
                         break;
                     case "NOW_PLAYING_STORED_MUSIC":
+                        $this->SendDebug(__FUNCTION__, "MUSIC: ".$command["notification"]["data"]["name"],0);
+                       
                         __setValue("BOSong",$command["notification"]["data"]["name"]);
                         __setValue("BOArtist",$command["notification"]["data"]["artist"]);
 
