@@ -34,14 +34,14 @@ class BangOlufsenDeviceBase extends IPSModule
  */
 class BangOlufsenDevice extends BangOlufsenDeviceBase
 {
-    var $State;
+    var $_State;
     public function __construct($InstanceID)
     {
         //Never delete this line!
         parent::__construct($InstanceID);
         
         //You can add custom code below.
-        $this->State=15;
+        $this->_State=15;
         
     }
 
@@ -57,7 +57,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         $id = $this->__CreateVariable("Artiest", 3, 0, "BOArtist", $this->InstanceID);
 
         $this->RequireParent("{3CFF0FD9-E306-41DB-9B5A-9D06D38576C3}");   
-        $this->State=20;    
+        $this->_State=20;    
     }
 
    public function ApplyChanges()
@@ -66,7 +66,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         // Diese Zeile nicht löschen
         parent::ApplyChanges();
 
-        $this->State=10;
+        $this->_State=10;
         
 
 
@@ -119,8 +119,8 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
     {
         $data = json_decode($JSONString);
         $this->SendDebug(__FUNCTION__, "RAW: ".print_r($data->Buffer, true),0);
-        $this->State++;
-        $this->SendDebug(__FUNCTION__, "COunt: ".$this->State,0);
+        $this->_State++;
+        $this->SendDebug(__FUNCTION__, "COunt: ".$this->_State,0);
         $js=explode("\n",$data->Buffer);
         foreach ( $js as $j)
         {
