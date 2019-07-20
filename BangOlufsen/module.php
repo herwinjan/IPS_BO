@@ -1,6 +1,6 @@
 <?php
 
-/*
+/** 
  * @addtogroup BangOlufsen
  * @{
  *
@@ -74,25 +74,32 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         // Diese Zeile nicht löschen
         parent::Create();
 
+        $this->RegisterProfileIntegerEx("Status.BO", "Information", "", "",   Array( 
+            Array(0, "prev",       "", -1),
+            Array(1, "play",       "", -1),
+            Array(2, "pause",      "", -1),
+            Array(3, "stop",       "", -1),
+            Array(4, "next",       "", -1)
+        ));
+
+        $this->RegisterProfileInteger("Volume.BO",   "Intensity",   "", " %",    0, 100, 1);
+        $this->RegisterProfileIntegerEx("Switch.BO", "Information", "",   "", Array( 
+            Array(0, "Off", "", 0xFF0000),
+            Array(1, "On",  "", 0x00FF00) )
+        );
+
         $id = $this->__CreateVariable("Status", 1, 0, "BOStatus", $this->InstanceID);
         IPS_SetVariableCustomProfile($id, "Status.BO");
-        $id = $this->__CreateVariable("Source", 3, "", "BOSource", $this->InstanceID);        
+        $id = $this->__CreateVariable("Source", 3, "", "BOSource", $this->InstanceID);
         $id = $this->__CreateVariable("Volume", 1, 0, "BOVolume", $this->InstanceID);
         IPS_SetVariableCustomProfile($id, "Volume.BO");
         $id = $this->__CreateVariable("Song", 3, "", "BOSong", $this->InstanceID);
         $id = $this->__CreateVariable("Artiest", 3, "", "BOArtist", $this->InstanceID);
         $id = $this->__CreateVariable("Voorgang", 3, "", "BOLoc", $this->InstanceID);
 
-        $this->RegisterProfileIntegerEx("Status.BO", "Information", "", "",   Array( Array(0, "prev",       "", -1),
-                                                                                        Array(1, "play",       "", -1),
-                                                                                        Array(2, "pause",      "", -1),
-                                                                                        Array(3, "stop",       "", -1),
-                                                                                        Array(4, "next",       "", -1)
-                                                                                         ));
-
-        $this->RegisterProfileInteger("Volume.BO",   "Intensity",   "", " %",    0, 100, 1);                                                                               
-        $this->RegisterProfileIntegerEx("Switch.BO", "Information", "",   "", Array( Array(0, "Off", "", 0xFF0000),
-                                                                                        Array(1, "On",  "", 0x00FF00) ));
+       
+        $this->EnableAction("BOVolume");
+        $this->EnableAction("BOStatus");
 
         $this->RegisterPropertyString('IP', '');
         $this->RegisterPropertyInteger('Port', 8080);
@@ -141,8 +148,46 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
     }
 
     public function RequestAction($ident, $value)
-    {
+    { 
+        switch ($ident) {
+            case "BOVolume":
+                
+            break;
+            case "BOStatus":
+                switch($value)
+                {
+                    case 1: // play
+                        $this->__sendCommand("BeoZone/Zone/Stream/Play","");
+                        break;
+                    case 2: // pause
+                        $this->__sendCommand("BeoZone/Zone/Stream/Pause","");
+                        break;
+                    case 3: // stop
+                        $this->__sendCommand("BeoZone/Zone/Stream/Pause","");
+                        break;
+                }
 
+            break;
+            default:
+            throw new Exception("Invalid ID");
+        }
+
+    }
+
+    public function __sendCommand($url, $data)
+    {
+        $ch = curl_init();
+        $timeout = 5;
+        curl_setopt($ch, CURLOPT_URL, "http://".$this->ReadPropertyString('IP').":".$this->ReadPropertyString('Port')."/". $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US) AppleWebKit/525.13 (KHTML, like Gecko) Chrome/0.A.B.C Safari/525.13');
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/json'
+        ));
+        curl_setopt($ch, CURLOPT_POST, true);
+        $file_content = curl_exec($ch);
+        curl_close($ch);
     }
 
     public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
