@@ -34,7 +34,7 @@ class BangOlufsenDeviceBase extends IPSModule
  */
 class BangOlufsenDevice extends BangOlufsenDeviceBase
 {
-    private $State;
+    var $State;
     public function __construct($InstanceID)
     {
         //Never delete this line!
