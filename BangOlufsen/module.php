@@ -207,6 +207,7 @@ class BangOlufsenDevice extends IPSModule
         $this->SendDebug('ID', $data['ConnectionID'], 0);
         $this->RegisterMessage($data['ConnectionID'], IM_CONNECT);
         $this->RegisterMessage($data['ConnectionID'], IM_DISCONNECT);
+        $this->RegisterMessage($data['ConnectionID'], IM_CHANGESTATUS);
         
 
         
