@@ -26,7 +26,7 @@ if (@constant('IPS_BASE') == null) { //Nur wenn Konstanten noch nicht bekannt si
  * @package BanfOlufsenDevice
  * @property int $Parent
  */
-class BanfOlufsenDevice extends IPSModule
+class BangOlufsenDevice extends IPSModule
 {
  
     public function __construct($InstanceID)
