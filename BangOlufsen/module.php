@@ -248,8 +248,11 @@ class BangOlufsenDevice extends IPSModule
         $js=explode("\n",utf8_decode($data->Buffer));
         foreach ( $js as $j)
         {
-            $command = json_decode($j);
-            $this->SendDebug(__FUNCTION__, "JSON: ".print_r($command, true),0);
+            $command = json_decode($j,TRUE);
+            if (count($command)>0)
+            {
+                $this->SendDebug(__FUNCTION__, "JSON: ".print_r($command, true),0);
+            }
         }
     }   
 
