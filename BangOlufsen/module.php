@@ -103,7 +103,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
 
         }
         $this->EnableAction("BOSources");
-        $this->__SetVariable("BOSources",1,1);
+        //$this->__SetVariable("BOSources",1,1);
 
        //$this->getDevice();
        $this->getActiveSources();
