@@ -208,6 +208,10 @@ class BangOlufsenDeviceBase extends IPSModule
         }
         $file_content = curl_exec($ch);
         $this->SendDebug(__FUNCTION__,"CURL ".$file_content,0);
+        if($errno = curl_errno($ch)) {
+            $error_message = curl_strerror($errno);
+            $this->SendDebug(__FUNCTION__,"CURL error: ({$errno}):\n {$error_message}",0);
+        }
         curl_close($ch);
         return $file_content;
     }
