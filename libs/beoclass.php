@@ -196,17 +196,14 @@ class BangOlufsenDeviceBase extends IPSModule
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
             'Content-Type: application/json'
         ));
-        
+
         if ($type=="POST") curl_setopt($ch, CURLOPT_POST, true);
         if ($type=="PUT") { 
 
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
             curl_setopt($ch, CURLOPT_POSTFIELDS,$data);
         }
-        if ($type=="GET")
-        {
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
-        }
+        
         $file_content = curl_exec($ch);
         $this->SendDebug(__FUNCTION__,"CURL URL: http://".$this->ReadPropertyString('IP').":".$this->ReadPropertyInteger('Port')."/". $url,0);
         $this->SendDebug(__FUNCTION__,"CURL return: ".$file_content,0);
