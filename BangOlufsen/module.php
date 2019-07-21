@@ -92,7 +92,6 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         $this->SendDebug('ID2', $this->InstanceID, 0);
         $this->RegisterMessage($data['ConnectionID'], 10505);
 
-        $this->Sources=Array();
         if(IPS_VariableProfileExists("Sources.BO"))
             IPS_DeleteVariableProfile("Sources.BO"); 
         $this->Sources=$this->getSources();
@@ -108,6 +107,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
 
        $this->online=TRUE;
        $this->openConnection();  
+       parent::ApplyChanges();
     }
 
     public function RequestAction($ident, $value)
