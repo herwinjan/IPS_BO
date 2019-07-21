@@ -98,7 +98,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         IPS_CreateVariableProfile("Sources.BO", 1);
         foreach ($this->Sources as $source)
         {           
-            $this->SendDebug(__FUNCTION__, "Add Profile (({$source["is"]})) ".$source["name"],0);
+            $this->SendDebug(__FUNCTION__, "Add Profile ({$source["id"]}) ".$source["name"],0);
             IPS_SetVariableProfileAssociation("Sources.BO", $source["count"], $source["name"], "", -1);
 
         }

@@ -32,7 +32,7 @@ class BangOlufsenDeviceBase extends IPSModule
             $this->__setNewValue("BOSource",$source);
         }
         else
-            $this->__setNewValue("BOSource",$link." -> ".$source);
+            $this->__setNewValue("BOSource",$link." ".$source);
 
     }
 
@@ -98,7 +98,7 @@ class BangOlufsenDeviceBase extends IPSModule
                     $pfn=$source["product"]["friendlyName"];
                     $pjid=$source["product"]["jid"];
                     if ($pjid!=$this->jid)
-                        $friendlyName=$pfn." -> ".$friendlyName;
+                        $friendlyName=$pfn."  ".$friendlyName;
                     $add= Array("count"=>$count, "id"=>$id, "name"=>$friendlyName, "jid"=>$pjid);
                     array_push($SourcesReturn,
                         $add
