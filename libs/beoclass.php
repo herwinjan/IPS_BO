@@ -120,9 +120,9 @@ class BangOlufsenDeviceBase extends IPSModule
                     $pjid=$source["product"]["jid"];
                     if ($pjid!=$this->jid)
                         $friendlyName=$pfn." -> ".$friendlyName;
-
+                    $add= Array("count"=>$count, "id"=>$id, "name"=>$friendlyName, "jid"=>$pjid);
                     array_push($this->Sources,
-                        Array("count"=>$count, "id"=>$id, "name"=>$friendlyName, "jid"=>$pjid)
+                        $add
                     );
 
                     $this->SendDebug(__FUNCTION__,"Sources ".$friendlyName."->".$id,0);
