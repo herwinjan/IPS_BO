@@ -125,6 +125,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         $this->Buffer="";
         $this->VolumeMin=0;
         $this->VolumeMax=100;
+        $this->Type=0;
         
         
         if ((float) IPS_GetKernelVersion() < 4.2) {
@@ -289,8 +290,22 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
                     case "NOW_PLAYING_STORED_MUSIC":
                         if (@count($command["notification"]["data"])>0)
                         {
+                            $this->Type=1;
                             $this->__setNewValue("BOSong",$command["notification"]["data"]["name"]);
                             $this->__setNewValue("BOArtist",$command["notification"]["data"]["artist"]);
+                        }
+                        else
+                        {
+                            $this->__setNewValue("BOSong","");
+                            $this->__setNewValue("BOArtist","");
+                        }
+                        break;
+                        case "NOW_PLAYING_NET_RADIO":
+                        if (@count($command["notification"]["data"])>0)
+                        {
+                            $this->Type=2;
+                            $this->__setNewValue("BOSong",$command["notification"]["data"]["name"]);
+                            $this->__setNewValue("BOArtist",$command["notification"]["data"]["liveDescription"]);
                         }
                         else
                         {
@@ -302,11 +317,17 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
                         $this->__setNewValue("BOSong",$command["notification"]["data"]["name"]);
                     break;
                     case "PROGRESS_INFORMATION";
-                        $this->__setStatus($command["notification"]["data"]["state"]);
-                        $pos=$command["notification"]["data"]["position"];
-                        $tot=$command["notification"]["data"]["totalDuration"];
-                        $this->__setNewValue("BOLoc",date('i:s',$pos)."/".date('i:s',$tot));
-
+                        if ($this->Type==1)
+                        {
+                            $this->__setStatus($command["notification"]["data"]["state"]);
+                            $pos=$command["notification"]["data"]["position"];
+                            $tot=$command["notification"]["data"]["totalDuration"];
+                            $this->__setNewValue("BOLoc",date('i:s',$pos)."/".date('i:s',$tot));
+                        }
+                        else
+                        {
+                            $this->__setNewValue("BOLoc","");
+                        }
                        
                         break;
                     case "VOLUME":
