@@ -101,6 +101,7 @@ class BangOlufsenDeviceBase extends IPSModule
 
     public function getSources()
     {
+        $SourcesReturn=Array();
         $body=$this->__sendCommand("BeoZone/Zone/Sources/","","GET");
         $js=explode("\n",$body);
         foreach ( $js as $j)
@@ -108,7 +109,7 @@ class BangOlufsenDeviceBase extends IPSModule
             if ($j[0]=='{')
             {
                 $this->getDevice();
-                $this->Sources=Array();
+                
                 $command = json_decode(trim(utf8_decode($j)),TRUE);  
                 $count=0;
                 foreach ($command["sources"] as $source)
@@ -121,7 +122,7 @@ class BangOlufsenDeviceBase extends IPSModule
                     if ($pjid!=$this->jid)
                         $friendlyName=$pfn." -> ".$friendlyName;
                     $add= Array("count"=>$count, "id"=>$id, "name"=>$friendlyName, "jid"=>$pjid);
-                    array_push($this->Sources,
+                    array_push($SourcesReturn,
                         $add
                     );
 
@@ -131,6 +132,7 @@ class BangOlufsenDeviceBase extends IPSModule
                 }
             }
         }
+        return $SourcesReturn;
     }
 
     public function getVolume()

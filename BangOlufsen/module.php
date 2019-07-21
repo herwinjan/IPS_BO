@@ -95,7 +95,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         $this->Sources=Array();
         if(IPS_VariableProfileExists("Sources.BO"))
             IPS_DeleteVariableProfile("Sources.BO"); 
-        $this->getSources();
+        $this->Sources=$this->getSources();
         IPS_CreateVariableProfile("Sources.BO", 1);
         foreach ($this->Sources as $source)
         {            
