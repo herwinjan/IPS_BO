@@ -65,6 +65,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
 
    public function ApplyChanges()
     {
+        $this->closeConnection();
         $this->State=10;
         // Diese Zeile nicht löschen
         parent::ApplyChanges();
@@ -95,7 +96,8 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
        $this->getDevice();
        $this->getActiveSources();
        $this->getVolume();
-       
+
+       $this->openConnection();      
 
     }
 

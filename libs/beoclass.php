@@ -15,6 +15,30 @@
 
 class BangOlufsenDeviceBase extends IPSModule
 {
+
+    public function closeConnection()
+    {
+        $data = IPS_GetInstance($this->InstanceID);
+        
+        IPS_SetProperty($data['ConnectionID'], "Open", FALSE);
+        IPS_ApplyChanges($data['ConnectionID']);
+    }
+    public function openConnection()
+    {
+        $data = IPS_GetInstance($this->InstanceID);
+        
+        IPS_SetProperty($data['ConnectionID'], "Open", TRUE);
+        IPS_ApplyChanges($data['ConnectionID']);
+    }
+    public function restartConnection()
+    {
+        $this->closeConnection();
+        delay(100);
+        $this->openConnection();
+        
+    }
+    
+
     public function getDevice()
     {       
         $body=$this->__sendCommand("BeoDevice","","GET");
@@ -33,7 +57,7 @@ class BangOlufsenDeviceBase extends IPSModule
                     //2702.1200268.25611490@products.bang-olufsen.com
                     $this->jid=$command["beoDevice"]["productId"]["typeNumber"].".".
                     $command["beoDevice"]["productId"]["itemNumber"].".".
-                    $command["beoDevice"]["productId"]["serialNumber"].".@products.bang-olufsen.com";
+                    $command["beoDevice"]["productId"]["serialNumber"]."@products.bang-olufsen.com";
 
                     IPS_LogMessage("B&O Device", $this->jid);
                 }
