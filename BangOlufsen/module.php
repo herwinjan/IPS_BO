@@ -153,7 +153,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
             case "BOVolume":
                 $max=$this->VolumeMax;
                 $min=$this->VolumeMin;
-                $vols=(($value*($max-$min)/100)+$min);
+                $vols=round((($value*($max-$min)/100)+$min));
 
                 $this->__sendCommand('BeoZone/Zone/Sound/Volume/Speaker/Level', json_encode(Array("level"=>$vols)), "PUT");
             break;
