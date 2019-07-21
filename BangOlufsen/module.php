@@ -65,9 +65,9 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
 
    public function ApplyChanges()
     {
+        $this->online=FALSE;
         $this->closeConnection();
         $this->State=10;
-        // Diese Zeile nicht löschen
         parent::ApplyChanges();
 
         $this->State=10;
@@ -77,8 +77,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         $this->Type=0;
         $this->jid="";
         $this->BeoName="";
-        
-        
+
         if ((float) IPS_GetKernelVersion() < 4.2) {
             $this->RegisterMessage(0, IPS_KERNELMESSAGE);
         } else {
@@ -90,15 +89,13 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         $this->SendDebug('ID', $data['ConnectionID'], 0);
         $this->SendDebug('ID2', $this->InstanceID, 0);
         $this->RegisterMessage($data['ConnectionID'], 10505);
-       // $this->RegisterMessage($data['ConnectionID'], IM_DISCONNECT);
-       // $this->RegisterMessage($data['ConnectionID'], IM_CHANGESTATUS);
 
        $this->getDevice();
        $this->getActiveSources();
        $this->getVolume();
 
-       $this->openConnection();      
-
+       $this->online=TRUE;
+       $this->openConnection();  
     }
 
     public function RequestAction($ident, $value)
@@ -145,12 +142,8 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
 
     }
 
-    
     public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
-    {
-        IPS_LogMessage("BO RECV", $Message);
-        IPS_LogMessage("BO RECV", $this->test);
-         
+    {        
         $this->SendDebug(__FUNCTION__, "TS: $TimeStamp SenderID " . $SenderID . ' with MessageID ' . $Message . ' Data: ' . print_r($Data, true), 0);
         if ($Message==10505)
         {
@@ -166,8 +159,8 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
             if ($Data[0]==200)
             {
                 $this->__setNewValue("BOStatus",3);
-
-                //TODO off status
+                if ($this->online)
+                    $this->restartConnection();
             }
         }
     }
@@ -180,20 +173,16 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         if (strlen($this->Buffer)>0) 
         {
             $data->Buffer=$this->Buffer.$data->Buffer;
-            $this->Buffer="";
-           // $this->SendDebug(__FUNCTION__, "append buffer -> ".strlen($data->Buffer),0);
+            $this->Buffer="";           
         }
-        //$this->SendDebug(__FUNCTION__, "Last: ".ord(substr($data->Buffer,-1)),0);
-        
-
+       
         if ( ord(substr($data->Buffer,-1))==10 )
         {
            // $this->SendDebug(__FUNCTION__, "FULL: ".print_r($data->Buffer, true),0);
         }
         else
         {
-            $this->Buffer=$data->Buffer;
-            //$this->SendDebug(__FUNCTION__, "full buffer",0);
+            $this->Buffer=$data->Buffer;            
             return;
             
         }
@@ -201,14 +190,12 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         $js=explode("\n",$data->Buffer);
         foreach ( $js as $j)
         {
-            if (strlen(trim($j))<=1) continue;
-            //$this->SendDebug(__FUNCTION__, "FE: ".trim($j),0);
+            if (strlen(trim($j))<=1) continue;            
             $command = json_decode(trim(utf8_decode($j)),TRUE);   
             
 
             if ($j[0] == '{' )
             {
-                //$this->SendDebug(__FUNCTION__, "RAWCOMMAND: ".print_r($command, true),0);
                 $this->SendDebug(__FUNCTION__, "COMMAND: ".$command["notification"]["type"],0);
                 
                 switch($command["notification"]["type"])
@@ -216,19 +203,11 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
                     case "SOURCE":
                         if (@count($command["notification"]["data"])>0)
                         {
-                            $source="";
-                            $link="";                           
-                            if (@$command["notification"]["data"]["primaryExperience"]["source"]["friendlyName"])
-                                $source=$command["notification"]["data"]["primaryExperience"]["source"]["friendlyName"];
-                       // if (@$command["primaryExperience"]["source"]["product"]["jid"])
-                            //$this->jid=$command["primaryExperience"]["source"]["product"]["jid"];
-                            if (@$command["notification"]["data"]["primaryExperience"]["source"]["product"]["friendlyName"])
-                                $link=$command["notification"]["data"]["primaryExperience"]["source"]["product"]["friendlyName"];
-                            $this->__setNewValue("BOSource",$link." -> ".$source);
+                           $this->setBeoSource($command["notification"]["data"]);
                         }
                         else    
                             $this->__setNewValue("BOSource","-");
-                            break;
+                        break;
                     case "NOW_PLAYING_STORED_MUSIC":
                         if (@count($command["notification"]["data"])>0)
                         {

@@ -38,6 +38,23 @@ class BangOlufsenDeviceBase extends IPSModule
         
     }
     
+    public function setBeoSource($command)
+    {
+        $source="";
+        $link="";                           
+        if (@$command["primaryExperience"]["source"]["friendlyName"])
+            $source=$command["primaryExperience"]["source"]["friendlyName"];                       
+        if (@$command["primaryExperience"]["source"]["product"]["friendlyName"])
+            $link=$command["primaryExperience"]["source"]["product"]["friendlyName"];
+
+        if ($this->jid==$command["primaryExperience"]["source"]["product"]["jid"])
+        {
+            $this->__setNewValue("BOSource",$source);
+        }
+        else
+            $this->__setNewValue("BOSource",$link." -> ".$source);
+
+    }
 
     public function getDevice()
     {       
@@ -75,18 +92,9 @@ class BangOlufsenDeviceBase extends IPSModule
         foreach ( $js as $j)
         {
             if (@$j[0]=='{')
-            {
-                $source="";
-                $link="";
+            {                
                 $command = json_decode(trim(utf8_decode($j)),TRUE);   
-                if (@$command["primaryExperience"]["source"]["friendlyName"])
-                    $source=$command["primaryExperience"]["source"]["friendlyName"];
-               // if (@$command["primaryExperience"]["source"]["product"]["jid"])
-                    //$this->jid=$command["primaryExperience"]["source"]["product"]["jid"];
-                if (@$command["primaryExperience"]["source"]["product"]["friendlyName"])
-                    $link=$command["primaryExperience"]["source"]["product"]["friendlyName"];
-                
-                    $this->__setNewValue("BOSource",$link." -> ".$source);
+                $this->setBeoSource($command);
             }
         }        
     }
