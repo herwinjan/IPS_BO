@@ -316,30 +316,23 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
     }
 
     public function closeConnection()
-    {
-        $data = IPS_GetInstance($this->InstanceID);
-        
-        IPS_SetProperty($data['ConnectionID'], "Open", FALSE);
-        IPS_ApplyChanges($data['ConnectionID']);
-        $this->online=FALSE;
+    {      
+        $this->online=FALSE;  
+        IPS_SetProperty($this->GetParentID(), "Open", false);
+        IPS_ApplyChanges($this->GetParentID());	
     }
     public function openConnection()
     {
-        $this->online=TRUE;
-        $data = IPS_GetInstance($this->InstanceID);
-       /* IPS_SetProperty($data['ConnectionID'],"Host",$this->ReadPropertyString('IP'));
-        IPS_ApplyChanges($data['ConnectionID']);
-        IPS_SetProperty($data['ConnectionID'],"Port",$this->ReadPropertyInteger('Port'));
-        IPS_ApplyChanges($data['ConnectionID']);*/
-        //IPS_SetProperty($data['ConnectionID'], "Open", TRUE);
-        //IPS_ApplyChanges($data['ConnectionID']);
-        
+        $this->online=TRUE;        
+        IPS_SetProperty($this->GetParentID(), "Open", true);
+        IPS_ApplyChanges($this->GetParentID());	
     }
     
     public function restartConnection()
     {
         $this->closeConnection();
-        sleep(1);
+        IPS_Sleep(2000);
+        IPS_Sleep(2000);
         $this->openConnection();        
     }
 }
