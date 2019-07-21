@@ -151,7 +151,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
     { 
         switch ($ident) {
             case "BOVolume":
-            $this->__sendCommand('BeoZone/Zone/Sound/Volume/Speaker/Level', array("level"=>$value),"PUT");
+            $this->__sendCommand('BeoZone/Zone/Sound/Volume/Speaker/Level', Array("level"=>$value), "PUT");
             break;
             case "BOStatus":
                 switch($value)
