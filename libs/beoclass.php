@@ -113,6 +113,7 @@ class BangOlufsenDeviceBase extends IPSModule
                 $count=0;
                 foreach ($command["sources"] as $source)
                 {
+                    $source=$source[1];
                     $id=$source["id"];
                     $friendlyName=$source["friendlyName"];
                     $pfn=$source["product"]["friendlyName"];
