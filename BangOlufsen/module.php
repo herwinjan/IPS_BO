@@ -100,6 +100,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         {            
             IPS_SetVariableProfileAssociation("Sources.BO", $source["count"], $source["name"], "", -1);
         }
+        $this->__SetVariable("BOSources",1);
 
        //$this->getDevice();
        $this->getActiveSources();
