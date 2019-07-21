@@ -92,6 +92,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
        // $this->RegisterMessage($data['ConnectionID'], IM_DISCONNECT);
        // $this->RegisterMessage($data['ConnectionID'], IM_CHANGESTATUS);
 
+       $this->getDevice();
        $this->getActiveSources();
        $this->getVolume();
        
@@ -212,7 +213,17 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
                 {
                     case "SOURCE":
                         if (@count($command["notification"]["data"])>0)
-                            $this->__setNewValue("BOSource",$command["notification"]["data"]["primaryExperience"]["source"]["friendlyName"]);
+                        {
+                            $source="";
+                            $link="";                           
+                            if (@$command["notification"]["data"]["primaryExperience"]["source"]["friendlyName"])
+                                $source=$command["notification"]["data"]["primaryExperience"]["source"]["friendlyName"];
+                       // if (@$command["primaryExperience"]["source"]["product"]["jid"])
+                            //$this->jid=$command["primaryExperience"]["source"]["product"]["jid"];
+                            if (@$command["notification"]["data"]["primaryExperience"]["source"]["product"]["friendlyName"])
+                                $link=$command["notification"]["data"]["primaryExperience"]["source"]["product"]["friendlyName"];
+                            $this->__setNewValue("BOSource",$link." -> ".$source);
+                        }
                         else    
                             $this->__setNewValue("BOSource","-");
                             break;

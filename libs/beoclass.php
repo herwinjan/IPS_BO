@@ -15,6 +15,32 @@
 
 class BangOlufsenDeviceBase extends IPSModule
 {
+    public function getDevice()
+    {       
+        $body=$this->__sendCommand("BeoDevice","","GET");
+        $js=explode("\n",$body);
+        foreach ( $js as $j)
+        {
+            if (@$j[0]=='{')
+            {
+                $source="";
+                $link="";
+                $command = json_decode(trim(utf8_decode($j)),TRUE);   
+                if (@$command["beoDevice"]["productId"]["productFriendlyName"]["productFriendlyName"])
+                    $this->BeoName=$command["primaryExperience"]["source"]["friendlyName"];
+                if (@$command["beoDevice"]["productId"]["serialNumber"]["itemNumber"])
+                {
+                    //2702.1200268.25611490@products.bang-olufsen.com
+                    $this->jid=$command["beoDevice"]["productId"]["serialNumber"]["typeNumber"].".".
+                    $command["beoDevice"]["productId"]["serialNumber"]["itemNumber"].".".
+                    $command["beoDevice"]["productId"]["serialNumber"]["serialNumber"].".@products.bang-olufsen.com";
+                }
+                    
+                
+                    $this->__setNewValue("BOSource",$link." -> ".$source);
+            }
+        }      
+    }
 
     public function getActiveSources()
     {
@@ -22,17 +48,19 @@ class BangOlufsenDeviceBase extends IPSModule
         $js=explode("\n",$body);
         foreach ( $js as $j)
         {
-            if ($j[0]=='{')
+            if (@$j[0]=='{')
             {
+                $source="";
+                $link="";
                 $command = json_decode(trim(utf8_decode($j)),TRUE);   
                 if (@$command["primaryExperience"]["source"]["friendlyName"])
-                    $this->__setNewValue("BOSource",$command["primaryExperience"]["source"]["friendlyName"]);
-                if (@$command["primaryExperience"]["source"]["product"]["jid"])
-                    $this->jid=$command["primaryExperience"]["source"]["product"]["jid"];
+                    $source=$command["primaryExperience"]["source"]["friendlyName"];
+               // if (@$command["primaryExperience"]["source"]["product"]["jid"])
+                    //$this->jid=$command["primaryExperience"]["source"]["product"]["jid"];
                 if (@$command["primaryExperience"]["source"]["product"]["friendlyName"])
-                    $this->jid=$command["primaryExperience"]["source"]["product"]["friendlyName"];
+                    $link=$command["primaryExperience"]["source"]["product"]["friendlyName"];
                 
-                
+                    $this->__setNewValue("BOSource",$link." -> ".$source);
             }
         }        
     }
@@ -44,6 +72,9 @@ class BangOlufsenDeviceBase extends IPSModule
         {
             if ($j[0]=='{')
             {
+                $max=0;
+                $min=0;
+                $level=0;
                 $command = json_decode(trim(utf8_decode($j)),TRUE);   
                 if (@$command["volume"]["speaker"]["range"]["maximum"])
                     $max=$command["volume"]["speaker"]["range"]["maximum"];
