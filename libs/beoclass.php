@@ -196,6 +196,7 @@ class BangOlufsenDeviceBase extends IPSModule
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
             'Content-Type: application/json'
         ));
+        
         if ($type=="POST") curl_setopt($ch, CURLOPT_POST, true);
         if ($type=="PUT") { 
 
