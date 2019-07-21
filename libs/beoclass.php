@@ -36,7 +36,7 @@ class BangOlufsenDeviceBase extends IPSModule
     public function restartConnection()
     {
         $this->closeConnection();
-        delay(100);
+        sleep(1);
         $this->openConnection();        
     }
 
@@ -125,9 +125,7 @@ class BangOlufsenDeviceBase extends IPSModule
                     array_push($SourcesReturn,
                         $add
                     );
-
-                    $this->SendDebug(__FUNCTION__,"Sources ".$friendlyName."->".$id,0);
-
+                    //$this->SendDebug(__FUNCTION__,"Sources ".$friendlyName."->".$id,0);
                     $count++;
                 }
             }
