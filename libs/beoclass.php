@@ -90,7 +90,7 @@ class BangOlufsenDeviceBase extends IPSModule
         $this->SetBuffer($name, serialize($value));
     }
 
-    public function __sendCommand($url, $data,$type="POST")
+    protected function __sendCommand($url, $data,$type="POST")
     {
         $ch = curl_init();
         $timeout = 5;
@@ -117,14 +117,14 @@ class BangOlufsenDeviceBase extends IPSModule
         return $file_content;
     }
 
-    private function __setNewValue($name, $value)
+    protected function __setNewValue($name, $value)
     {
         $sid = @IPS_GetObjectIDByIdent($name, $this->InstanceID);
        // $this->SendDebug(__FUNCTION__, "SV: ".$name." -> ".$sid." -> ".$value,0);
         if ($sid) SetValue($sid, $value);
     }
     
-    private function __CreateCategory($Name, $Ident = '', $ParentID = 0)
+    protected function __CreateCategory($Name, $Ident = '', $ParentID = 0)
     {
         $RootCategoryID = $this->InstanceID;
         IPS_LogMessage("Visonic DEBUG", "CreateCategory: ( $Name, $Ident, $ParentID ) \n");
@@ -149,7 +149,7 @@ class BangOlufsenDeviceBase extends IPSModule
         return $CatID;
     }
 
-    private function __CreateVariable($Name, $Type, $Value, $Ident = '', $ParentID = 0)
+    protected function __CreateVariable($Name, $Type, $Value, $Ident = '', $ParentID = 0)
     {
         IPS_LogMessage("Visonic DEBUG", "CreateVariable: ( $Name, $Type, $Value, $Ident, $ParentID ) \n");
         if ('' != $Ident) {
@@ -180,7 +180,7 @@ class BangOlufsenDeviceBase extends IPSModule
         return $VarID;
     }
 
-    private function __SetVariable($VarID, $Type, $Value)
+    protected function __SetVariable($VarID, $Type, $Value)
     {
         switch ($Type) {
             case 0: // boolean
