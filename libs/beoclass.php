@@ -22,6 +22,7 @@ class BangOlufsenDeviceBase extends IPSModule
         
         IPS_SetProperty($data['ConnectionID'], "Open", FALSE);
         IPS_ApplyChanges($data['ConnectionID']);
+        $this->online=FALSE;
     }
     public function openConnection()
     {
@@ -29,21 +30,22 @@ class BangOlufsenDeviceBase extends IPSModule
         
         IPS_SetProperty($data['ConnectionID'], "Open", TRUE);
         IPS_ApplyChanges($data['ConnectionID']);
+        $this->online=TRUE;
     }
+    
     public function restartConnection()
     {
         $this->closeConnection();
         delay(100);
-        $this->openConnection();
-        
+        $this->openConnection();        
     }
-    
+
     public function setBeoSource($command)
     {
         $source="";
         $link="";                           
         if (@$command["primaryExperience"]["source"]["friendlyName"])
-            $source=$command["primaryExperience"]["source"]["friendlyName"];                       
+            $source=$command["primaryExperience"]["source"]["friendlyName"];
         if (@$command["primaryExperience"]["source"]["product"]["friendlyName"])
             $link=$command["primaryExperience"]["source"]["product"]["friendlyName"];
 
@@ -78,9 +80,7 @@ class BangOlufsenDeviceBase extends IPSModule
 
                     IPS_LogMessage("B&O Device", $this->jid);
                 }
-                    
-                
-                    $this->__setNewValue("BOSource",$link." -> ".$source);
+                $this->__setNewValue("BOSource",$link." -> ".$source);
             }
         }      
     }
@@ -98,6 +98,37 @@ class BangOlufsenDeviceBase extends IPSModule
             }
         }        
     }
+
+    public function getSources()
+    {
+        $body=$this->__sendCommand("BeoZone/Zone/Sources/","","GET");
+        $js=explode("\n",$body);
+        foreach ( $js as $j)
+        {
+            if ($j[0]=='{')
+            {
+                $this->getDevice();
+                $this->Sources=Array();
+                $command = json_decode(trim(utf8_decode($j)),TRUE);  
+                $count=0;
+                foreach ($command["sources"] as $source)
+                {
+                    $id=$source["id"];
+                    $friendlyName=$source["friendlyName"];
+                    $pfn=$source["product"]["friendlyName"];
+                    $pjid=$source["product"]["jid"];
+                    if ($pjid!=$this->jid)
+                        $friendlyName=$pfn." -> ".$friendlyName;
+
+                    push_array($this->Sources,
+                        Array("count"=>$count, "id"=>$id, "name"=>$friendlyName, "jid"=>$pjid)
+                    );
+                    $count++;
+                }
+            }
+        }
+    }
+
     public function getVolume()
     {
         $body=$this->__sendCommand("BeoZone/Zone/Sound/Volume","","GET");
@@ -132,9 +163,7 @@ class BangOlufsenDeviceBase extends IPSModule
 
     
 
-        /**
-     * Wert einer Eigenschaft aus den InstanceBuffer lesen.
-     *
+    /**     
      * @access public
      * @param string $name Propertyname
      * @return mixed Value of Name
@@ -143,9 +172,7 @@ class BangOlufsenDeviceBase extends IPSModule
     {
         return unserialize($this->GetBuffer($name));
     }
-    /**
-     * Wert einer Eigenschaft in den InstanceBuffer schreiben.
-     *
+    /**     
      * @access public
      * @param string $name Propertyname
      * @param mixed Value of Name

@@ -16,7 +16,6 @@ require_once(__DIR__ . "/../libs/beoclass.php");
  */
 class BangOlufsenDevice extends BangOlufsenDeviceBase
 {
-
     public function Create()
     {
         // Diese Zeile nicht löschen
@@ -39,12 +38,13 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         $id = $this->__CreateVariable("Status", 1, 0, "BOStatus", $this->InstanceID);
         IPS_SetVariableCustomProfile($id, "Status.BO");
         $id = $this->__CreateVariable("Source", 3, "", "BOSource", $this->InstanceID);
+        $id = $this->__CreateVariable("Sources", 1, "", "BOSources", $this->InstanceID);
+        IPS_SetVariableCustomProfile($id, "Sources.BO");
         $id = $this->__CreateVariable("Volume", 1, 0, "BOVolume", $this->InstanceID);
         IPS_SetVariableCustomProfile($id, "Volume.BO");
         $id = $this->__CreateVariable("Song", 3, "", "BOSong", $this->InstanceID);
         $id = $this->__CreateVariable("Artiest", 3, "", "BOArtist", $this->InstanceID);
         $id = $this->__CreateVariable("Voorgang", 3, "", "BOLoc", $this->InstanceID);
-
        
         $this->EnableAction("BOVolume");
         $this->EnableAction("BOStatus");
@@ -52,9 +52,20 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         $this->RegisterPropertyString('IP', '');
         $this->RegisterPropertyInteger('Port', 8080);
 
+        $this->Sources=Array();
+        if(IPS_VariableProfileExists("Sources.BO"))
+            IPS_DeleteVariableProfile("Sources.BO"); 
+        $this->getSources();
+        IPS_CreateVariableProfile("Sources.BO", 1);
+        foreach ($this->Sources as $source)
+        {            
+            IPS_SetVariableProfileAssociation("Sources.BO", $source["count"], $source["name"], "", -1);
+        }
+
         $this->RequireParent("{3CFF0FD9-E306-41DB-9B5A-9D06D38576C3}");   
            
     }
+    
     public function GetConfigurationForParent()
     {
         $JsonArray = array('Host' => $this->ReadPropertyString('IP'), 'Port' => $this->ReadPropertyInteger('Port'));
@@ -62,8 +73,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         return $Json;
     }
 
-
-   public function ApplyChanges()
+    public function ApplyChanges()
     {
         $this->online=FALSE;
         $this->closeConnection();
@@ -76,7 +86,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         $this->VolumeMax=100;
         $this->Type=0;
         $this->jid="";
-        $this->BeoName="";
+        $this->BeoName="";        
 
         if ((float) IPS_GetKernelVersion() < 4.2) {
             $this->RegisterMessage(0, IPS_KERNELMESSAGE);
@@ -90,7 +100,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         $this->SendDebug('ID2', $this->InstanceID, 0);
         $this->RegisterMessage($data['ConnectionID'], 10505);
 
-       $this->getDevice();
+       //$this->getDevice();
        $this->getActiveSources();
        $this->getVolume();
 
@@ -131,10 +141,8 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
                         case 4: // next
                         $this->__sendCommand("BeoZone/Zone/Stream/Forward","");
                         $this->__sendCommand("BeoZone/Zone/Stream/Forward/Release","");
-                        break;
-                 
+                        break;                 
                 }
-
             break;
             default:
             throw new Exception("Invalid ID");
@@ -178,7 +186,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
        
         if ( ord(substr($data->Buffer,-1))==10 )
         {
-           // $this->SendDebug(__FUNCTION__, "FULL: ".print_r($data->Buffer, true),0);
+           
         }
         else
         {
@@ -191,8 +199,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         foreach ( $js as $j)
         {
             if (strlen(trim($j))<=1) continue;            
-            $command = json_decode(trim(utf8_decode($j)),TRUE);   
-            
+            $command = json_decode(trim(utf8_decode($j)),TRUE);               
 
             if ($j[0] == '{' )
             {
@@ -301,6 +308,4 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         }
         $this->__setNewValue("BOStatus",$st);
     }
-
-   
 }
