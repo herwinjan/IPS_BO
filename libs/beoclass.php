@@ -19,7 +19,7 @@ class BangOlufsenDeviceBase extends IPSModule
     public function getActiveSources()
     {
         $body=$this->__sendCommand("BeoZone/Zone/ActiveSources/","","GET");
-        $js=explode("\n",$data->Buffer);
+        $js=explode("\n",$body);
         foreach ( $js as $j)
         {
             if ($j[0]=='{')
@@ -39,7 +39,7 @@ class BangOlufsenDeviceBase extends IPSModule
     public function getVolume()
     {
         $body=$this->__sendCommand("/BeoZone/Zone/Sound/Volume","","GET");
-        $js=explode("\n",$data->Buffer);
+        $js=explode("\n",$body);
         foreach ( $js as $j)
         {
             if ($j[0]=='{')
