@@ -132,6 +132,7 @@ class BangOlufsenDeviceBase extends IPSModule
                 }
             }
         }
+        $this->SendDebug(__FUNCTION__,"Sources List ".print_r($SourcesReturn,TRUE),0);
         return $SourcesReturn;
     }
 
