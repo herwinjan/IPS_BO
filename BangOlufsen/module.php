@@ -335,4 +335,10 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         IPS_Sleep(2000);
         $this->openConnection();        
     }
+
+    private function GetParentID()
+	{
+		$ParentID = (IPS_GetInstance($this->InstanceID)['ConnectionID']);  
+	return $ParentID;
+	}
 }
