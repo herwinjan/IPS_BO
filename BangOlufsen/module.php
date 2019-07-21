@@ -52,16 +52,6 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         $this->RegisterPropertyString('IP', '');
         $this->RegisterPropertyInteger('Port', 8080);
 
-        $this->Sources=Array();
-        if(IPS_VariableProfileExists("Sources.BO"))
-            IPS_DeleteVariableProfile("Sources.BO"); 
-        $this->getSources();
-        IPS_CreateVariableProfile("Sources.BO", 1);
-        foreach ($this->Sources as $source)
-        {            
-            IPS_SetVariableProfileAssociation("Sources.BO", $source["count"], $source["name"], "", -1);
-        }
-
         $this->RequireParent("{3CFF0FD9-E306-41DB-9B5A-9D06D38576C3}");   
            
     }
@@ -79,7 +69,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         $this->closeConnection();
         $this->State=10;
         parent::ApplyChanges();
-
+      
         $this->State=10;
         $this->Buffer="";
         $this->VolumeMin=0;
@@ -99,6 +89,17 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         $this->SendDebug('ID', $data['ConnectionID'], 0);
         $this->SendDebug('ID2', $this->InstanceID, 0);
         $this->RegisterMessage($data['ConnectionID'], 10505);
+
+
+        $this->Sources=Array();
+        if(IPS_VariableProfileExists("Sources.BO"))
+            IPS_DeleteVariableProfile("Sources.BO"); 
+        $this->getSources();
+        IPS_CreateVariableProfile("Sources.BO", 1);
+        foreach ($this->Sources as $source)
+        {            
+            IPS_SetVariableProfileAssociation("Sources.BO", $source["count"], $source["name"], "", -1);
+        }
 
        //$this->getDevice();
        $this->getActiveSources();

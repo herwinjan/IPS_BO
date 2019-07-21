@@ -207,7 +207,8 @@ class BangOlufsenDeviceBase extends IPSModule
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
         }
         $file_content = curl_exec($ch);
-        $this->SendDebug(__FUNCTION__,"CURL ".$file_content,0);
+        $this->SendDebug(__FUNCTION__,"CURL URL: http://".$this->ReadPropertyString('IP').":".$this->ReadPropertyInteger('Port')."/". $url,0);
+        $this->SendDebug(__FUNCTION__,"CURL return: ".$file_content,0);
         if($errno = curl_errno($ch)) {
             $error_message = curl_strerror($errno);
             $this->SendDebug(__FUNCTION__,"CURL error: ({$errno}):\n {$error_message}",0);
