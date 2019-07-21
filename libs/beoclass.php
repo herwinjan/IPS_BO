@@ -27,7 +27,8 @@ class BangOlufsenDeviceBase extends IPSModule
         if (@$command["primaryExperience"]["source"]["product"]["friendlyName"])
             $link=$command["primaryExperience"]["source"]["product"]["friendlyName"];
 
-        if ($this->jid==$command["primaryExperience"]["source"]["product"]["jid"])
+        
+        if ($this->jid==@$command["primaryExperience"]["source"]["product"]["jid"])
         {
             $this->__setNewValue("BOSource",$source);
         }
