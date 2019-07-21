@@ -300,7 +300,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
                             $this->__setNewValue("BOArtist","");
                         }
                         break;
-                        case "NOW_PLAYING_NET_RADIO":
+                    case "NOW_PLAYING_NET_RADIO":
                         if (@count($command["notification"]["data"])>0)
                         {
                             $this->Type=2;
@@ -313,13 +313,32 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
                             $this->__setNewValue("BOArtist","");
                         }
                         break;
+                    case "NOW_PLAYING_ENDED":
+                       
+                        $this->Type=0;
+                            
+                        $this->__setNewValue("BOSong","");
+                        $this->__setNewValue("BOArtist","");
+                       
+                        break;
+                    case "SHUTDOWN":
+                        if ($command["notification"]["data"]["reason"]=="standby")
+                        {
+                            $this->Type=0;
+                            $this->__setNewValue("BOSong","");
+                            $this->__setNewValue("BOArtist","");
+                            $this->__setNewValue("BOLoc","");
+                            $this->__setStatus("stop");
+                        }
+                        break;
                     case "NUMBER_AND_NAME":
                         $this->__setNewValue("BOSong",$command["notification"]["data"]["name"]);
                     break;
                     case "PROGRESS_INFORMATION";
+                        $this->__setStatus($command["notification"]["data"]["state"]);
                         if ($this->Type==1)
                         {
-                            $this->__setStatus($command["notification"]["data"]["state"]);
+                            
                             $pos=$command["notification"]["data"]["position"];
                             $tot=$command["notification"]["data"]["totalDuration"];
                             $this->__setNewValue("BOLoc",date('i:s',$pos)."/".date('i:s',$tot));
