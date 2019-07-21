@@ -123,6 +123,9 @@ class BangOlufsenDeviceBase extends IPSModule
                     push_array($this->Sources,
                         Array("count"=>$count, "id"=>$id, "name"=>$friendlyName, "jid"=>$pjid)
                     );
+
+                    $this->SendDebug(__FUNCTION__,"Sources ".$friendlyName."->".$id,0);
+
                     $count++;
                 }
             }
