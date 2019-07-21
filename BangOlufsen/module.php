@@ -108,10 +108,11 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
        //$this->getDevice();
        $this->getActiveSources();
        $this->getVolume();
+       parent::ApplyChanges();
 
        $this->online=TRUE;
        $this->openConnection();  
-       parent::ApplyChanges();
+       
     }
 
     public function RequestAction($ident, $value)
