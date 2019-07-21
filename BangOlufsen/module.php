@@ -151,7 +151,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
     { 
         switch ($ident) {
             case "BOVolume":
-            $this->__sendCommand('BeoZone/Zone/Sound/Volume/Speaker/Level', Array("level"=>$value), "PUT");
+            $this->__sendCommand('BeoZone/Zone/Sound/Volume/Speaker/Level', json_encode(Array("level"=>$value)), "PUT");
             break;
             case "BOStatus":
                 switch($value)
@@ -202,7 +202,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         if ($type=="PUT") { 
 
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
-            curl_setopt($ch, CURLOPT_POSTFIELDS,http_build_query($data));
+            curl_setopt($ch, CURLOPT_POSTFIELDS,$data);
         }
         $file_content = curl_exec($ch);
         $this->SendDebug(__FUNCTION__,"CURL ".$file_content,0);
