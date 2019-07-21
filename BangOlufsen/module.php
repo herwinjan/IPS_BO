@@ -310,4 +310,30 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         }
         $this->__setNewValue("BOStatus",$st);
     }
+
+    public function closeConnection()
+    {
+        $data = IPS_GetInstance($this->InstanceID);
+        
+        IPS_SetProperty($data['ConnectionID'], "Open", FALSE);
+        IPS_ApplyChanges($data['ConnectionID']);
+        $this->online=FALSE;
+    }
+    public function openConnection()
+    {
+        $data = IPS_GetInstance($this->InstanceID);
+        IPS_SetProperty($data['ConnectionID'],"Host",$this->ReadPropertyString('IP'));
+        IPS_SetProperty($data['ConnectionID'],"Port",$this->ReadPropertyString('Port'));
+        
+        IPS_SetProperty($data['ConnectionID'], "Open", TRUE);
+        IPS_ApplyChanges($data['ConnectionID']);
+        $this->online=TRUE;
+    }
+    
+    public function restartConnection()
+    {
+        $this->closeConnection();
+        sleep(1);
+        $this->openConnection();        
+    }
 }

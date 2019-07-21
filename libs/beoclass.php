@@ -16,29 +16,7 @@
 class BangOlufsenDeviceBase extends IPSModule
 {
 
-    public function closeConnection()
-    {
-        $data = IPS_GetInstance($this->InstanceID);
-        
-        IPS_SetProperty($data['ConnectionID'], "Open", FALSE);
-        IPS_ApplyChanges($data['ConnectionID']);
-        $this->online=FALSE;
-    }
-    public function openConnection()
-    {
-        $data = IPS_GetInstance($this->InstanceID);
-        
-        IPS_SetProperty($data['ConnectionID'], "Open", TRUE);
-        IPS_ApplyChanges($data['ConnectionID']);
-        $this->online=TRUE;
-    }
-    
-    public function restartConnection()
-    {
-        $this->closeConnection();
-        sleep(1);
-        $this->openConnection();        
-    }
+
 
     public function setBeoSource($command)
     {
