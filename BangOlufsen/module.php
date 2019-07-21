@@ -34,6 +34,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
             Array(0, "Off", "", 0xFF0000),
             Array(1, "On",  "", 0x00FF00) )
         );
+        IPS_CreateVariableProfile("Sources.BO", 1);
 
         $id = $this->__CreateVariable("Status", 1, 0, "BOStatus", $this->InstanceID);
         IPS_SetVariableCustomProfile($id, "Status.BO");
@@ -89,7 +90,6 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         $this->SendDebug('ID', $data['ConnectionID'], 0);
         $this->SendDebug('ID2', $this->InstanceID, 0);
         $this->RegisterMessage($data['ConnectionID'], 10505);
-
 
         $this->Sources=Array();
         if(IPS_VariableProfileExists("Sources.BO"))
