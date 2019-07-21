@@ -323,10 +323,10 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
     {
         $this->online=TRUE;
         $data = IPS_GetInstance($this->InstanceID);
-        IPS_SetProperty($data['ConnectionID'],"Host",$this->ReadPropertyString('IP'));
+       /* IPS_SetProperty($data['ConnectionID'],"Host",$this->ReadPropertyString('IP'));
         IPS_ApplyChanges($data['ConnectionID']);
-        IPS_SetProperty($data['ConnectionID'],"Port",$this->ReadPropertyString('Port'));
-        IPS_ApplyChanges($data['ConnectionID']);
+        IPS_SetProperty($data['ConnectionID'],"Port",$this->ReadPropertyInteger('Port'));
+        IPS_ApplyChanges($data['ConnectionID']);*/
         IPS_SetProperty($data['ConnectionID'], "Open", TRUE);
         IPS_ApplyChanges($data['ConnectionID']);
         
