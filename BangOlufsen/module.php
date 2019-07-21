@@ -34,7 +34,8 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
             Array(0, "Off", "", 0xFF0000),
             Array(1, "On",  "", 0x00FF00) )
         );
-        IPS_CreateVariableProfile("Sources.BO", 1);
+        if(!IPS_VariableProfileExists("Sources.BO"))
+            IPS_CreateVariableProfile("Sources.BO", 1);
 
         $id = $this->__CreateVariable("Status", 1, 0, "BOStatus", $this->InstanceID);
         IPS_SetVariableCustomProfile($id, "Status.BO");
