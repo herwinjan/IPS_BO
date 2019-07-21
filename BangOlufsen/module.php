@@ -39,7 +39,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         $id = $this->__CreateVariable("Status", 1, 0, "BOStatus", $this->InstanceID);
         IPS_SetVariableCustomProfile($id, "Status.BO");
         $id = $this->__CreateVariable("Source", 3, "", "BOSource", $this->InstanceID);
-        $id = $this->__CreateVariable("Sources", 1, "", "BOSources", $this->InstanceID);
+        $id = $this->__CreateVariable("Sources", 1, 0, "BOSources", $this->InstanceID);
         IPS_SetVariableCustomProfile($id, "Sources.BO");
         $id = $this->__CreateVariable("Volume", 1, 0, "BOVolume", $this->InstanceID);
         IPS_SetVariableCustomProfile($id, "Volume.BO");
