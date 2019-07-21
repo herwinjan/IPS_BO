@@ -121,7 +121,7 @@ class BangOlufsenDeviceBase extends IPSModule
                     if ($pjid!=$this->jid)
                         $friendlyName=$pfn." -> ".$friendlyName;
 
-                    push_array($this->Sources,
+                    array_push($this->Sources,
                         Array("count"=>$count, "id"=>$id, "name"=>$friendlyName, "jid"=>$pjid)
                     );
 
