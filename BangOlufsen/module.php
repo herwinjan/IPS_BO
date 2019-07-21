@@ -327,8 +327,8 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         IPS_ApplyChanges($data['ConnectionID']);
         IPS_SetProperty($data['ConnectionID'],"Port",$this->ReadPropertyInteger('Port'));
         IPS_ApplyChanges($data['ConnectionID']);*/
-        IPS_SetProperty($data['ConnectionID'], "Open", TRUE);
-        IPS_ApplyChanges($data['ConnectionID']);
+        //IPS_SetProperty($data['ConnectionID'], "Open", TRUE);
+        //IPS_ApplyChanges($data['ConnectionID']);
         
     }
     
