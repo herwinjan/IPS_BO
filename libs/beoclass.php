@@ -28,12 +28,14 @@ class BangOlufsenDeviceBase extends IPSModule
                 $command = json_decode(trim(utf8_decode($j)),TRUE);   
                 if (@$command["beoDevice"]["productId"]["productFriendlyName"]["productFriendlyName"])
                     $this->BeoName=$command["primaryExperience"]["source"]["friendlyName"];
-                if (@$command["beoDevice"]["productId"]["serialNumber"]["itemNumber"])
+                if (@$command["beoDevice"]["productId"]["itemNumber"])
                 {
                     //2702.1200268.25611490@products.bang-olufsen.com
-                    $this->jid=$command["beoDevice"]["productId"]["serialNumber"]["typeNumber"].".".
-                    $command["beoDevice"]["productId"]["serialNumber"]["itemNumber"].".".
-                    $command["beoDevice"]["productId"]["serialNumber"]["serialNumber"].".@products.bang-olufsen.com";
+                    $this->jid=$command["beoDevice"]["productId"]["typeNumber"].".".
+                    $command["beoDevice"]["productId"]["itemNumber"].".".
+                    $command["beoDevice"]["productId"]["serialNumber"].".@products.bang-olufsen.com";
+
+                    IPS_LogMessage("B&O Device", $this->jid);
                 }
                     
                 
