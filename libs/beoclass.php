@@ -15,9 +15,6 @@
 
 class BangOlufsenDeviceBase extends IPSModule
 {
-
-
-
     public function setBeoSource($command)
     {
         $this->SendDebug(__FUNCTION__,"Command Source ".print_r($command,TRUE),0);
@@ -27,7 +24,7 @@ class BangOlufsenDeviceBase extends IPSModule
         if (count($command)<=0)
         {
             $this->BeoOnline=FALSE;
-            $this->__setNewValue("BOPower",FALSE);
+            $this->__setNewValue("BEOPower",FALSE);
             $this->SendDebug(__FUNCTION__,"Source live Off!",0);
             return;
         }
@@ -37,7 +34,7 @@ class BangOlufsenDeviceBase extends IPSModule
             if (@$command["activeSources"]["primary"]=="")
             {
             $this->BeoOnline=FALSE;
-            $this->__setNewValue("BOPower",FALSE);
+            $this->__setNewValue("BEOPower",FALSE);
             $this->SendDebug(__FUNCTION__,"Source GET Off!",0);
 
             return;
@@ -50,7 +47,7 @@ class BangOlufsenDeviceBase extends IPSModule
             {
                 if ($command["primaryExperience"]["id"]==$c["id"])
                 {
-                    $this->__setNewValue("BOSources",$c["count"]);
+                    $this->__setNewValue("BEOSources",$c["count"]);
                 }
             }            
         }
@@ -63,12 +60,12 @@ class BangOlufsenDeviceBase extends IPSModule
         
         if ($this->jid==@$command["primaryExperience"]["source"]["product"]["jid"])
         {
-            $this->__setNewValue("BOSource",$source);
+            $this->__setNewValue("BEOSource",$source);
         }
         else
-            $this->__setNewValue("BOSource",$link." -> ".$source);
+            $this->__setNewValue("BEOSource",$link." -> ".$source);
         $this->BeoOnline=TRUE;
-        $this->__setNewValue("BOPower",True);
+        $this->__setNewValue("BEOPower",True);
 
     }
 
@@ -92,9 +89,9 @@ class BangOlufsenDeviceBase extends IPSModule
                     $command["beoDevice"]["productId"]["itemNumber"].".".
                     $command["beoDevice"]["productId"]["serialNumber"]."@products.bang-olufsen.com";
 
-                    IPS_LogMessage("B&O Device", $this->jid);
+                    //IPS_LogMessage("B&O Device", $this->jid);
                 }
-                $this->__setNewValue("BOSource",$link." -> ".$source);
+                $this->__setNewValue("BEOSource",$link." -> ".$source);
             }
         }      
     }
@@ -177,7 +174,7 @@ class BangOlufsenDeviceBase extends IPSModule
                                
         $new=round(($level - $min) * 100) / ($max - $min);
                                  
-        $this->__setNewValue("BOVolume",$new);
+        $this->__setNewValue("BEOVolume",$new);
     }
 
     

@@ -21,7 +21,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         // Diese Zeile nicht löschen
         parent::Create();
 
-        $this->RegisterProfileIntegerEx("Status.BO", "Information", "", "",   Array( 
+        $this->RegisterProfileIntegerEx("Status.BEO", "Information", "", "",   Array( 
             Array(0, "prev",       "", -1),
             Array(1, "play",       "", -1),
             Array(2, "pause",      "", -1),
@@ -29,30 +29,30 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
             Array(4, "next",       "", -1)
         ));
 
-        $this->RegisterProfileInteger("Volume.BO",   "Intensity",   "", " %",    0, 100, 1);
-        $this->RegisterProfileIntegerEx("Switch.BO", "Information", "",   "", Array( 
+        $this->RegisterProfileInteger("Volume.BEO",   "Intensity",   "", " %",    0, 100, 1);
+        $this->RegisterProfileIntegerEx("Switch.BEO", "Information", "",   "", Array( 
             Array(0, "Off", "", 0xFF0000),
             Array(1, "On",  "", 0x00FF00) )
         );
-        if(!IPS_VariableProfileExists("Sources.BO"))
-            IPS_CreateVariableProfile("Sources.BO", 1);
+        if(!IPS_VariableProfileExists("Sources.BEO"))
+            IPS_CreateVariableProfile("Sources.BEO", 1);
 
-        $id = $this->__CreateVariable("Status", 1, 0, "BOStatus", $this->InstanceID);
-        IPS_SetVariableCustomProfile($id, "Status.BO");
-        $id = $this->__CreateVariable("Source", 3, "", "BOSource", $this->InstanceID);
-        $id = $this->__CreateVariable("Sources", 1, 0, "BOSources", $this->InstanceID);
-        IPS_SetVariableCustomProfile($id, "Sources.BO");
-        $id = $this->__CreateVariable("Volume", 1, 0, "BOVolume", $this->InstanceID);
-        IPS_SetVariableCustomProfile($id, "Volume.BO");
-        $id = $this->__CreateVariable("Song", 3, "", "BOSong", $this->InstanceID);
-        $id = $this->__CreateVariable("Artiest", 3, "", "BOArtist", $this->InstanceID);
-        $id = $this->__CreateVariable("Voorgang", 3, "", "BOLoc", $this->InstanceID);
-        $id = $this->__CreateVariable("Power", 0, FALSE, "BOPower", $this->InstanceID);
+        $id = $this->__CreateVariable("Status", 1, 0, "BEOStatus", $this->InstanceID);
+        IPS_SetVariableCustomProfile($id, "Status.BEO");
+        $id = $this->__CreateVariable("Source", 3, "", "BEOSource", $this->InstanceID);
+        $id = $this->__CreateVariable("Sources", 1, 0, "BEOSources", $this->InstanceID);
+        IPS_SetVariableCustomProfile($id, "Sources.BEO");
+        $id = $this->__CreateVariable("Volume", 1, 0, "BEOVolume", $this->InstanceID);
+        IPS_SetVariableCustomProfile($id, "Volume.BEO");
+        $id = $this->__CreateVariable("Song", 3, "", "BEOSong", $this->InstanceID);
+        $id = $this->__CreateVariable("Artiest", 3, "", "BEOArtist", $this->InstanceID);
+        $id = $this->__CreateVariable("Voorgang", 3, "", "BEOLoc", $this->InstanceID);
+        $id = $this->__CreateVariable("Power", 0, FALSE, "BEOPower", $this->InstanceID);
         IPS_SetVariableCustomProfile($id, "~Switch");       
        
-        $this->EnableAction("BOVolume");
-        $this->EnableAction("BOStatus");
-        $this->EnableAction("BOPower");
+        $this->EnableAction("BEOVolume");
+        $this->EnableAction("BEOStatus");
+        $this->EnableAction("BEOPower");
 
         $this->RegisterPropertyString('IP', '');
         $this->RegisterPropertyInteger('Port', 8080);
@@ -107,8 +107,8 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
 
         }
         
-        $this->EnableAction("BOSources");
-        //$this->__SetVariable("BOSources",1,1);
+        $this->EnableAction("BEOSources");
+        //$this->__SetVariable("BEOSources",1,1);
 
        //$this->getDevice();
        $this->getActiveSources();
@@ -118,7 +118,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
        $this->online=TRUE;
        $this->openConnection();  
 
-       $this->RegisterTimerNow('Ping', 15000,  'BO_KeepAlive('.$this->InstanceID.');');
+       $this->RegisterTimerNow('Ping', 5000,  'BEO_KeepAlive('.$this->InstanceID.');');
        
     }
 
@@ -143,30 +143,30 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
     public function RequestAction($ident, $value)
     { 
         switch ($ident) {
-            case "BOVolume":
+            case "BEOVolume":
                 $max=$this->VolumeMax;
                 $min=$this->VolumeMin;
                 $vols=round((($value*($max-$min)/100)+$min));
 
                 $this->__sendCommand('BeoZone/Zone/Sound/Volume/Speaker/Level', json_encode(Array("level"=>$vols)), "PUT");
             break;
-            case "BOPower":
+            case "BEOPower":
                 if ($value==FALSE)
                 {
                     $str=Array("standby"=>Array("powerState"=>"standby"));
  
                     $this->__sendCommand("BeoDevice/powerManagement/standby",json_encode($str),"PUT");
                     $this->BeoOnline=FALSE;
-                    $this->__setNewValue("BOPower",FALSE);
+                    $this->__setNewValue("BEOPower",FALSE);
                 }
                 else   
                 {
                     $this->__sendCommand("BeoZone/Zone/Stream/Play",Array(),"PUT");
-                    $this->__setNewValue("BOPower",TRUE);
+                    $this->__setNewValue("BEOPower",TRUE);
                     $this->BeoOnline=TRUE;
                 }
                 break;
-            case "BOSources":
+            case "BEOSources":
                 $this->SendDebug(__FUNCTION__, "Select Source: ".$value,0);
 
                 foreach($this->Sources as $c)
@@ -182,7 +182,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
 
                 //BeoZone/Zone/ActiveSources
                 break;
-            case "BOStatus":
+            case "BEOStatus":
                 switch($value)
                 {
                     case 0: // prev
@@ -230,7 +230,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
             }
             if ($Data[0]==200)
             {
-                $this->__setNewValue("BOStatus",3);
+                $this->__setNewValue("BEOStatus",3);
                 if ($this->online)
                     $this->restartConnection();
             }
@@ -279,50 +279,50 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
                         if (@count($command["notification"]["data"])>0)
                         {
                             $this->Type=1;
-                            $this->__setNewValue("BOSong",$command["notification"]["data"]["name"]);
-                            $this->__setNewValue("BOArtist",$command["notification"]["data"]["artist"]);
+                            $this->__setNewValue("BEOSong",$command["notification"]["data"]["name"]);
+                            $this->__setNewValue("BEOArtist",$command["notification"]["data"]["artist"]);
                         }
                         else
                         {
-                            $this->__setNewValue("BOSong","");
-                            $this->__setNewValue("BOArtist","");
+                            $this->__setNewValue("BEOSong","");
+                            $this->__setNewValue("BEOArtist","");
                         }
                         break;
                     case "NOW_PLAYING_NET_RADIO":
                         if (@count($command["notification"]["data"])>0)
                         {
                             $this->Type=2;
-                            $this->__setNewValue("BOSong",$command["notification"]["data"]["name"]);
-                            $this->__setNewValue("BOArtist",$command["notification"]["data"]["liveDescription"]);
+                            $this->__setNewValue("BEOSong",$command["notification"]["data"]["name"]);
+                            $this->__setNewValue("BEOArtist",$command["notification"]["data"]["liveDescription"]);
                         }
                         else
                         {
-                            $this->__setNewValue("BOSong","");
-                            $this->__setNewValue("BOArtist","");
+                            $this->__setNewValue("BEOSong","");
+                            $this->__setNewValue("BEOArtist","");
                         }
                         break;
                     case "NOW_PLAYING_ENDED":
                        
                         $this->Type=0;
                             
-                        $this->__setNewValue("BOSong","");
-                        $this->__setNewValue("BOArtist","");
+                        $this->__setNewValue("BEOSong","");
+                        $this->__setNewValue("BEOArtist","");
                        
                         break;
                     case "SHUTDOWN":
                         if ($command["notification"]["data"]["reason"]=="standby")
                         {
                             $this->Type=0;
-                            $this->__setNewValue("BOSong","");
-                            $this->__setNewValue("BOArtist","");
-                            $this->__setNewValue("BOLoc","");
-                            $this->__setNewValue("BOSource","Shutdown");
+                            $this->__setNewValue("BEOSong","");
+                            $this->__setNewValue("BEOArtist","");
+                            $this->__setNewValue("BEOLoc","");
+                            $this->__setNewValue("BEOSource","Shutdown");
                             $this->__setStatus("stop");
-                            $this->__setNewValue("BOPower",FALSE);
+                            $this->__setNewValue("BEOPower",FALSE);
                         }
                         break;
                     case "NUMBER_AND_NAME":
-                        $this->__setNewValue("BOSong",$command["notification"]["data"]["name"]);
+                        $this->__setNewValue("BEOSong",$command["notification"]["data"]["name"]);
                     break;
                     case "PROGRESS_INFORMATION";
                         $this->__setStatus($command["notification"]["data"]["state"]);
@@ -331,11 +331,11 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
                             
                             $pos=$command["notification"]["data"]["position"];
                             $tot=$command["notification"]["data"]["totalDuration"];
-                            $this->__setNewValue("BOLoc",date('i:s',$pos)."/".date('i:s',$tot));
+                            $this->__setNewValue("BEOLoc",date('i:s',$pos)."/".date('i:s',$tot));
                         }
                         else
                         {
-                            $this->__setNewValue("BOLoc","");
+                            $this->__setNewValue("BEOLoc","");
                         }
                        
                         break;
@@ -367,7 +367,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
                 $st=1;
                 break;
         }
-        $this->__setNewValue("BOStatus",$st);
+        $this->__setNewValue("BEOStatus",$st);
     }
 
     public function closeConnection()
@@ -394,6 +394,6 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
     private function GetParentID()
 	{
 		$ParentID = (IPS_GetInstance($this->InstanceID)['ConnectionID']);  
-	return $ParentID;
+	    return $ParentID;
 	}
 }
