@@ -96,29 +96,31 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         //$this->SendDebug('ID2', $this->InstanceID, 0);
         $this->RegisterMessage($data['ConnectionID'], 10505);
 
-        if(IPS_VariableProfileExists("Sources.BEO"))
-            IPS_DeleteVariableProfile("Sources.BEO"); 
-        $this->Sources=$this->getSources();
-        IPS_CreateVariableProfile("Sources.BEO", 1);
-        foreach ($this->Sources as $source)
-        {           
-            $this->SendDebug(__FUNCTION__, "Add Profile ({$source["id"]}) ".$source["name"],0);
-            IPS_SetVariableProfileAssociation("Sources.BEO", $source["count"], $source["name"], "", -1);
+        if (strlen($this->ReadPropertyString('IP'))>0)
+        {
+            if(IPS_VariableProfileExists("Sources.BEO"))
+                IPS_DeleteVariableProfile("Sources.BEO"); 
+            $this->Sources=$this->getSources();
+            IPS_CreateVariableProfile("Sources.BEO", 1);
+            foreach ($this->Sources as $source)
+            {           
+                $this->SendDebug(__FUNCTION__, "Add Profile ({$source["id"]}) ".$source["name"],0);
+                IPS_SetVariableProfileAssociation("Sources.BEO", $source["count"], $source["name"], "", -1);
+            }
+            
+            $this->EnableAction("BEOSources");
+            //$this->__SetVariable("BEOSources",1,1);
 
+            //$this->getDevice();
+            $this->getActiveSources();
+            $this->getVolume();
+            parent::ApplyChanges();
+
+            $this->online=TRUE;
+            $this->openConnection();  
         }
-        
-        $this->EnableAction("BEOSources");
-        //$this->__SetVariable("BEOSources",1,1);
 
-       //$this->getDevice();
-       $this->getActiveSources();
-       $this->getVolume();
-       parent::ApplyChanges();
-
-       $this->online=TRUE;
-       $this->openConnection();  
-
-       $this->RegisterTimerNow('Ping', 5000,  'BEO_KeepAlive('.$this->InstanceID.');');
+        $this->RegisterTimerNow('Ping', 5000,  'BEO_KeepAlive('.$this->InstanceID.');');
        
     }
 
@@ -371,16 +373,23 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
     }
 
     public function closeConnection()
-    {      
-        $this->online=FALSE;  
-        IPS_SetProperty($this->GetParentID(), "Open", false);
-        IPS_ApplyChanges($this->GetParentID());	
+    {    
+        if (strlen($this->ReadPropertyString('IP'))>0)
+        {  
+            $this->online=FALSE;  
+            IPS_SetProperty($this->GetParentID(), "Open", false);
+            IPS_ApplyChanges($this->GetParentID());	
+        }
     }
     public function openConnection()
     {
-        $this->online=TRUE;        
-        IPS_SetProperty($this->GetParentID(), "Open", true);
-        IPS_ApplyChanges($this->GetParentID());	
+        if (strlen($this->ReadPropertyString('IP'))>0)
+        {
+            $this->online=TRUE;        
+            IPS_SetProperty($this->GetParentID(), "Open", true);
+            IPS_ApplyChanges($this->GetParentID());	
+
+        }
     }
     
     public function restartConnection()
