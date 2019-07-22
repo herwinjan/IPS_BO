@@ -377,7 +377,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         $this->__setNewValue("BEOStatus",$st);
     }
 
-    public function closeConnection()
+    protected function closeConnection()
     {    
         if (strlen($this->ReadPropertyString('IP'))>0)
         {  
@@ -386,7 +386,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
             IPS_ApplyChanges($this->GetParentID());	
         }
     }
-    public function openConnection()
+    protected function openConnection()
     {
         if (strlen($this->ReadPropertyString('IP'))>0)
         {
@@ -397,7 +397,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         }
     }
     
-    public function restartConnection()
+    protected function restartConnection()
     {
         $this->closeConnection();
         IPS_Sleep(2000);
