@@ -160,10 +160,26 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
                 }
                 else   
                 {
-                    $this->__sendCommand("BeoZone/Zone/Stream/Play",Array(),"POST");
+                    $this->__sendCommand("BeoZone/Zone/Stream/Play",Array(),"PUT");
                     $this->__setNewValue("BOPower",TRUE);
                     $this->BeoOnline=TRUE;
                 }
+                break;
+            case "BOSources":
+                $this->SendDebug(__FUNCTION__, "Select Source: ".$value,0);
+
+                foreach($this->Sources as $s)
+                {
+                    if ($c["count"]==$value)
+                    {
+                        $this->__sendCommand("BeoZone/Zone/ActiveSources",json_encode(Array("primaryExperience"=>Array("source"=>Array("id"=>$c["id"])))),"PUT");
+                        $this->SendDebug(__FUNCTION__, "Select Source: ".$c["name"],0);
+
+                        //self._postReq('POST','', {"primaryExperience":{"source":{"id":chosenSource}}})
+                    }
+                }
+
+                //BeoZone/Zone/ActiveSources
                 break;
             case "BOStatus":
                 switch($value)
