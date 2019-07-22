@@ -106,8 +106,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
             IPS_SetVariableProfileAssociation("Sources.BO", $source["count"], $source["name"], "", -1);
 
         }
-        $id = $this->__CreateVariable("Sources", 1, 0, "BOSources", $this->InstanceID);
-        IPS_SetVariableCustomProfile($id, "Sources.BO");
+        
         $this->EnableAction("BOSources");
         //$this->__SetVariable("BOSources",1,1);
 
@@ -174,8 +173,8 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
                 {
                     if ($c["count"]==$value)
                     {
-                        $this->__sendCommand("BeoZone/Zone/ActiveSources",json_encode(Array("primaryExperience"=>Array("source"=>Array("id"=>$c["id"])))),"PUT");
-                        $this->SendDebug(__FUNCTION__, "Select Source: ".$c["name"],0);
+                        $this->__sendCommand("BeoZone/Zone/ActiveSources",json_encode(Array("primaryExperience"=>Array("source"=>Array("id"=>$c["id"])))),"POST");
+                        $this->SendDebug(__FUNCTION__, "Select Source: ".$c["name"]." => ".json_encode(Array("primaryExperience"=>Array("source"=>Array("id"=>$c["id"])))),0);
 
                         //self._postReq('POST','', {"primaryExperience":{"source":{"id":chosenSource}}})
                     }
