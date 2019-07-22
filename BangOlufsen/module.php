@@ -330,10 +330,15 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
                         $this->__setStatus($command["notification"]["data"]["state"]);
                         if ($this->Type==1)
                         {
-                            
-                            $pos=$command["notification"]["data"]["position"];
-                            $tot=$command["notification"]["data"]["totalDuration"];
-                            $this->__setNewValue("BEOLoc",date('i:s',$pos)."/".date('i:s',$tot));
+                            $pos=0;
+                            $tot=0;
+                            if (@$command["notification"]["data"]["position"])
+                                $pos=$command["notification"]["data"]["position"];
+                                
+                            if (@$command["notification"]["data"]["totalDuration"])
+                                $tot=$command["notification"]["data"]["totalDuration"];
+                            if ($tot>0)
+                                $this->__setNewValue("BEOLoc",date('i:s',$pos)."/".date('i:s',$tot));
                         }
                         else
                         {
