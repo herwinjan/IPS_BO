@@ -47,9 +47,12 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         $id = $this->__CreateVariable("Song", 3, "", "BOSong", $this->InstanceID);
         $id = $this->__CreateVariable("Artiest", 3, "", "BOArtist", $this->InstanceID);
         $id = $this->__CreateVariable("Voorgang", 3, "", "BOLoc", $this->InstanceID);
+        $id = $this->__CreateVariable("Power", 0, FALSE, "BOPower", $this->InstanceID);
+        IPS_SetVariableCustomProfile($id, "~Switch");       
        
         $this->EnableAction("BOVolume");
         $this->EnableAction("BOStatus");
+        $this->EnableAction("BOPower");
 
         $this->RegisterPropertyString('IP', '');
         $this->RegisterPropertyInteger('Port', 8080);
@@ -78,7 +81,8 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         $this->VolumeMax=100;
         $this->Type=0;
         $this->jid="";
-        $this->BeoName="";        
+        $this->BeoName="";   
+        $this->BeoOnline=FALSE;     
 
         if ((float) IPS_GetKernelVersion() < 4.2) {
             $this->RegisterMessage(0, IPS_KERNELMESSAGE);
@@ -145,6 +149,18 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
 
                 $this->__sendCommand('BeoZone/Zone/Sound/Volume/Speaker/Level', json_encode(Array("level"=>$vols)), "PUT");
             break;
+            case "BOPower":
+                if ($value==FALSE)
+                {
+                    $this->__sendCommand("BeoDevice/powerManagement/standby","");
+                    $this->BeoOnline=FALSE;
+                }
+                else   
+                {
+                    $this->__sendCommand("BeoZone/Zone/Stream/Play","");
+                    $this->BeoOnline=TRUE;
+                }
+                break;
             case "BOStatus":
                 switch($value)
                 {

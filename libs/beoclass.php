@@ -21,7 +21,16 @@ class BangOlufsenDeviceBase extends IPSModule
     public function setBeoSource($command)
     {
         $source="";
-        $link="";                           
+        $link="";         
+        
+        if (@$command["activeSources"]["primary"]=="")
+        {
+            $this->BeoOnline=FALSE;
+            $this->__setNewValue("BOOnline",FALSE);
+            return;
+
+        }
+
         if (@$command["primaryExperience"]["source"]["friendlyName"])
             $source=$command["primaryExperience"]["source"]["friendlyName"];
         if (@$command["primaryExperience"]["source"]["product"]["friendlyName"])
@@ -34,6 +43,8 @@ class BangOlufsenDeviceBase extends IPSModule
         }
         else
             $this->__setNewValue("BOSource",$link." ".$source);
+        $this->BeoOnline=TRUE;
+        $this->__setNewValue("BOOnline",True);
 
     }
 
