@@ -152,7 +152,9 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
             case "BOPower":
                 if ($value==FALSE)
                 {
-                    $this->__sendCommand("BeoDevice/powerManagement/standby","");
+                    $str=Array("standby"=>Array("powerState"=>"standby"));
+ 
+                    $this->__sendCommand("BeoDevice/powerManagement/standby",json_encode($str),"PUT");
                     $this->BeoOnline=FALSE;
                 }
                 else   
