@@ -254,7 +254,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
                 switch($command["notification"]["type"])
                 {
                     case "SOURCE":
-                        if (@count($command["notification"]["data"])>0)
+                        if (@$command["notification"]["data"])
                         {
                            $this->setBeoSource($command["notification"]["data"]);
                         }
