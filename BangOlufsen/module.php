@@ -125,7 +125,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
     {
         if (IPS_GetProperty($this->GetParentID(), "Open" ))
         {
-            $sendData="2\r\n";
+            $sendData="2\r\n\r\n\r\n";
             $JSON['DataID'] = '{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}';
             $JSON['Buffer'] = utf8_encode($sendData);
             $JsonString = json_encode($JSON);
