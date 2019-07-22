@@ -168,7 +168,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
             case "BOSources":
                 $this->SendDebug(__FUNCTION__, "Select Source: ".$value,0);
 
-                foreach($this->Sources as $s)
+                foreach($this->Sources as $c)
                 {
                     if ($c["count"]==$value)
                     {
