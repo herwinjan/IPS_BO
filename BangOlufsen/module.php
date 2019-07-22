@@ -112,7 +112,27 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
 
        $this->online=TRUE;
        $this->openConnection();  
+
+       $this->RegisterTimerNow('Ping', 15000,  'BO_KeepAlive('.$this->InstanceID.');');
        
+    }
+
+    public function KeepAlive()
+    {
+        if (IPS_GetProperty($this->GetParentID(), "Open" ))
+        {
+            $sendData="2\r\n";
+            $JSON['DataID'] = '{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}';
+            $JSON['Buffer'] = utf8_encode($sendData);
+            $JsonString = json_encode($JSON);
+            $this->SendDataToParent($JsonString);
+            $this->SendDebug(__FUNCTION__,"Send KeepAlive",0);
+        }
+        else
+        {
+            $this->openConnection(); 
+            $this->SendDebug(__FUNCTION__,"Session closed?? reopen!",0);
+        }
     }
 
     public function RequestAction($ident, $value)
