@@ -92,18 +92,18 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         }
 
         $data = IPS_GetInstance($this->InstanceID);
-        $this->SendDebug('ID', $data['ConnectionID'], 0);
-        $this->SendDebug('ID2', $this->InstanceID, 0);
+        //$this->SendDebug('ID', $data['ConnectionID'], 0);
+        //$this->SendDebug('ID2', $this->InstanceID, 0);
         $this->RegisterMessage($data['ConnectionID'], 10505);
 
-        if(IPS_VariableProfileExists("Sources.BO"))
-            IPS_DeleteVariableProfile("Sources.BO"); 
+        if(IPS_VariableProfileExists("Sources.BEO"))
+            IPS_DeleteVariableProfile("Sources.BEO"); 
         $this->Sources=$this->getSources();
-        IPS_CreateVariableProfile("Sources.BO", 1);
+        IPS_CreateVariableProfile("Sources.BEO", 1);
         foreach ($this->Sources as $source)
         {           
             $this->SendDebug(__FUNCTION__, "Add Profile ({$source["id"]}) ".$source["name"],0);
-            IPS_SetVariableProfileAssociation("Sources.BO", $source["count"], $source["name"], "", -1);
+            IPS_SetVariableProfileAssociation("Sources.BEO", $source["count"], $source["name"], "", -1);
 
         }
         
