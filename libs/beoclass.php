@@ -28,7 +28,8 @@ class BangOlufsenDeviceBase extends IPSModule
         {
             $this->BeoOnline=FALSE;
             $this->__setNewValue("BOPower",FALSE);
-            $this->SendDebug(__FUNCTION__,"Source Off!");
+            $this->SendDebug(__FUNCTION__,"Source Off!",0);
+            
             return;
         }
 
