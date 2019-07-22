@@ -44,6 +44,17 @@ class BangOlufsenDeviceBase extends IPSModule
             }
         }
 
+        if (@$command["primaryExperience"]["id"])
+        {
+            foreach ($this->Sources as $c)
+            {
+                if ($command["primaryExperience"]["id"]==$c["id"])
+                {
+                    $this->__setNewValue("BOSources",$c["count"]);
+                }
+            }            
+        }
+
         if (@$command["primaryExperience"]["source"]["friendlyName"])
             $source=$command["primaryExperience"]["source"]["friendlyName"];
         if (@$command["primaryExperience"]["source"]["product"]["friendlyName"])
