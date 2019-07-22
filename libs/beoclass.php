@@ -15,7 +15,7 @@
 
 class BangOlufsenDeviceBase extends IPSModule
 {
-    public function setBeoSource($command)
+    protected function setBeoSource($command)
     {
         $this->SendDebug(__FUNCTION__,"Command Source ".print_r($command,TRUE),0);
         $source="";
@@ -69,7 +69,7 @@ class BangOlufsenDeviceBase extends IPSModule
 
     }
 
-    public function getDevice()
+    protected function getDevice()
     {       
         $body=$this->__sendCommand("BeoDevice","","GET");
         $js=explode("\n",$body);
@@ -96,7 +96,7 @@ class BangOlufsenDeviceBase extends IPSModule
         }      
     }
 
-    public function getActiveSources()
+    protected function getActiveSources()
     {
         $body=$this->__sendCommand("BeoZone/Zone/ActiveSources/","","GET");
         $js=explode("\n",$body);
@@ -110,7 +110,7 @@ class BangOlufsenDeviceBase extends IPSModule
         }        
     }
 
-    public function getSources()
+    protected function getSources()
     {
         $SourcesReturn=Array();
         $body=$this->__sendCommand("BeoZone/Zone/Sources/","","GET");
@@ -145,7 +145,7 @@ class BangOlufsenDeviceBase extends IPSModule
         return $SourcesReturn;
     }
 
-    public function getVolume()
+    protected function getVolume()
     {
         $body=$this->__sendCommand("BeoZone/Zone/Sound/Volume","","GET");
         $js=explode("\n",$body);
@@ -167,7 +167,12 @@ class BangOlufsenDeviceBase extends IPSModule
             }
         }        
     }
-    public function setVolume($level, $min, $max)
+    /*
+    * @property int $level 
+    * @property int $min 
+    * @property int $max 
+    */
+    protected function setVolume($level, $min, $max)
     {
         $this->VolumeMin=$min;
         $this->VolumeMax=$max;
