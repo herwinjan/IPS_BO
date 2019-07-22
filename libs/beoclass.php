@@ -26,7 +26,7 @@ class BangOlufsenDeviceBase extends IPSModule
         if (@$command["activeSources"]["primary"]=="")
         {
             $this->BeoOnline=FALSE;
-            $this->__setNewValue("BOOnline",FALSE);
+            $this->__setNewValue("BOPower",FALSE);
             return;
 
         }
@@ -42,9 +42,9 @@ class BangOlufsenDeviceBase extends IPSModule
             $this->__setNewValue("BOSource",$source);
         }
         else
-            $this->__setNewValue("BOSource",$link." ".$source);
+            $this->__setNewValue("BOSource",$link." -> ".$source);
         $this->BeoOnline=TRUE;
-        $this->__setNewValue("BOOnline",True);
+        $this->__setNewValue("BOPower",True);
 
     }
 

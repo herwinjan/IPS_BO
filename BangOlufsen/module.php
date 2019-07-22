@@ -156,11 +156,12 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
  
                     $this->__sendCommand("BeoDevice/powerManagement/standby",json_encode($str),"PUT");
                     $this->BeoOnline=FALSE;
+                    $this->__setNewValue("BOPower",FALSE);
                 }
                 else   
                 {
                     $this->__sendCommand("BeoZone/Zone/Stream/Play",Array(),"POST");
-                    
+                    $this->__setNewValue("BOPower",TRUE);
                     $this->BeoOnline=TRUE;
                 }
                 break;
@@ -253,13 +254,9 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
                 
                 switch($command["notification"]["type"])
                 {
-                    case "SOURCE":
-                        if (@$command["notification"]["data"])
-                        {
-                           $this->setBeoSource($command["notification"]["data"]);
-                        }
-                        else    
-                            $this->__setNewValue("BOSource","-");
+                    case "SOURCE":                        
+                        $this->setBeoSource($command["notification"]["data"]);
+                        
                         break;
                     case "NOW_PLAYING_STORED_MUSIC":
                         if (@count($command["notification"]["data"])>0)
@@ -304,6 +301,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
                             $this->__setNewValue("BOLoc","");
                             $this->__setNewValue("BOSource","Shutdown");
                             $this->__setStatus("stop");
+                            $this->__setNewValue("BOPower",FALSE);
                         }
                         break;
                     case "NUMBER_AND_NAME":
