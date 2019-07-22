@@ -22,15 +22,26 @@ class BangOlufsenDeviceBase extends IPSModule
     {
         $this->SendDebug(__FUNCTION__,"Command Source ".print_r($command,TRUE),0);
         $source="";
-        $link="";         
+        $link="";      
         
-        if (@$command["activeSources"]["primary"]=="")
+        if (count($command)<=0)
         {
             $this->BeoOnline=FALSE;
             $this->__setNewValue("BOPower",FALSE);
-            $this->SendDebug(__FUNCTION__,"Source Off!",0);
-            
+            $this->SendDebug(__FUNCTION__,"Source live Off!",0);
             return;
+        }
+        
+        if (@$command["activeSources"]["primary"])
+        {
+            if (@$command["activeSources"]["primary"]=="")
+            {
+            $this->BeoOnline=FALSE;
+            $this->__setNewValue("BOPower",FALSE);
+            $this->SendDebug(__FUNCTION__,"Source GET Off!",0);
+
+            return;
+            }
         }
 
         if (@$command["primaryExperience"]["source"]["friendlyName"])
