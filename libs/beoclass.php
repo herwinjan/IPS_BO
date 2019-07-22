@@ -20,6 +20,7 @@ class BangOlufsenDeviceBase extends IPSModule
 
     public function setBeoSource($command)
     {
+        $this->SendDebug(__FUNCTION__,"Command Source ".print_r($command,TRUE),0);
         $source="";
         $link="";         
         
