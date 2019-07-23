@@ -172,7 +172,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
                 }
                 else   
                 {
-                    $this->__sendCommand("BeoZone/Zone/Stream/Play",Array(),"PUT");
+                    $this->__sendCommand("BeoZone/Zone/Stream/Play",Array(),"POST");
                     $this->__setNewValue("BEOPower",TRUE);
                     $this->BeoOnline=TRUE;
                 }
