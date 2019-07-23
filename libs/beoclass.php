@@ -156,6 +156,7 @@ class BangOlufsenDeviceBase extends IPSModule
                 $max=0;
                 $min=0;
                 $level=0;
+                $muted=FALSE;
                 $command = json_decode(trim(utf8_decode($j)),TRUE);   
                 if (@$command["volume"]["speaker"]["range"]["maximum"])
                     $max=$command["volume"]["speaker"]["range"]["maximum"];
@@ -163,7 +164,11 @@ class BangOlufsenDeviceBase extends IPSModule
                     $min=$command["volume"]["speaker"]["range"]["minimum"];
                 if (@$command["volume"]["speaker"]["level"])
                     $level=$command["volume"]["speaker"]["level"];
-                $this->setVolume($level, $min, $max);                
+                if (@$command["volume"]["speaker"]["muted"])
+                {
+                    $muted=$command["volume"]["speaker"]["muted"];
+                }
+                $this->setVolume($level, $min, $max, $muted);                
             }
         }        
     }
@@ -172,7 +177,7 @@ class BangOlufsenDeviceBase extends IPSModule
     * @property int $min 
     * @property int $max 
     */
-    protected function setVolume($level, $min, $max)
+    protected function setVolume($level, $min, $max, $muted=FALSE)
     {
         $this->VolumeMin=$min;
         $this->VolumeMax=$max;
@@ -180,6 +185,8 @@ class BangOlufsenDeviceBase extends IPSModule
         $new=round(($level - $min) * 100) / ($max - $min);
                                  
         $this->__setNewValue("BEOVolume",$new);
+        $this->BeoMuted=$muted;
+        $this->__setNewValue("BEOMute",$this->BeoMuted);
     }
 
     

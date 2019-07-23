@@ -48,11 +48,14 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         $id = $this->__CreateVariable("Artiest", 3, "", "BEOArtist", $this->InstanceID);
         $id = $this->__CreateVariable("Voorgang", 3, "", "BEOLoc", $this->InstanceID);
         $id = $this->__CreateVariable("Power", 0, FALSE, "BEOPower", $this->InstanceID);
-        IPS_SetVariableCustomProfile($id, "~Switch");       
+        IPS_SetVariableCustomProfile($id, "~Switch");    
+        $id = $this->__CreateVariable("Mute", 0, FALSE, "BEOMuted", $this->InstanceID);
+        IPS_SetVariableCustomProfile($id, "~Switch");      
        
         $this->EnableAction("BEOVolume");
         $this->EnableAction("BEOStatus");
         $this->EnableAction("BEOPower");
+        $this->EnableAction("BEOMuted");        
 
         $this->RegisterPropertyString('IP', '');
         $this->RegisterPropertyInteger('Port', 8080);
@@ -83,6 +86,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         $this->jid="";
         $this->BeoName="";   
         $this->BeoOnline=FALSE;     
+        $this->BeoMuted=FALSE;
 
         if ((float) IPS_GetKernelVersion() < 4.2) {
             $this->RegisterMessage(0, IPS_KERNELMESSAGE);
@@ -149,8 +153,13 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
                 $max=$this->VolumeMax;
                 $min=$this->VolumeMin;
                 $vols=round((($value*($max-$min)/100)+$min));
-
+                
                 $this->__sendCommand('BeoZone/Zone/Sound/Volume/Speaker/Level', json_encode(Array("level"=>$vols)), "PUT");
+            break;
+            case "BEOMuted":
+                $this->__sendCommand('BeoZone/Zone/Sound/Volume/Speaker/Muted', json_encode(Array("muted"=>$value)), "PUT");
+                $this->BeoMuted=$value;
+                $this->__setNewValue("BEOMuted",$value);
             break;
             case "BEOPower":
                 if ($value==FALSE)
@@ -350,7 +359,8 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
                         $level=$command["notification"]["data"]["speaker"]["level"];
                         $min=$command["notification"]["data"]["speaker"]["range"]["minimum"];
                         $max=$command["notification"]["data"]["speaker"]["range"]["maximum"];
-                        $this->setVolume($level,$min,$max);
+                        $mute=$command["notification"]["data"]["speaker"]["muted"];
+                        $this->setVolume($level,$min,$max,$mute);
                         break;
 
                 }
