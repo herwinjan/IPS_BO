@@ -1,6 +1,6 @@
 <?php
 
-/** 
+/**
  * @addtogroup BangOlufsen
  * @{
  *
@@ -15,124 +15,116 @@
 
 class BangOlufsenDeviceBase extends IPSModule
 {
-    protected function setBeoSource($command)
+    protected function _setBeoSource($command)
     {
-        $this->SendDebug(__FUNCTION__,"Command Source ".print_r($command,TRUE),0);
-        $source="";
-        $link="";      
-        
-        if (count($command)<=0)
-        {
-            $this->BeoOnline=FALSE;
-            $this->__setNewValue("BEOPower",FALSE);
-            $this->SendDebug(__FUNCTION__,"Source live Off!",0);
+        $this->SendDebug(__FUNCTION__, "Command Source " . print_r($command, true), 0);
+        $source = "";
+        $link = "";
+
+        if (count($command) <= 0) {
+            $this->BeoOnline = false;
+            $this->__setNewValue("BEOPower", false);
+            $this->SendDebug(__FUNCTION__, "Source live Off!", 0);
             return;
         }
-        
-        if (@$command["activeSources"]["primary"])
-        {
-            if (@$command["activeSources"]["primary"]=="")
-            {
-            $this->BeoOnline=FALSE;
-            $this->__setNewValue("BEOPower",FALSE);
-            $this->SendDebug(__FUNCTION__,"Source GET Off!",0);
 
-            return;
+        if (@$command["activeSources"]["primary"]) {
+            if (@$command["activeSources"]["primary"] == "") {
+                $this->BeoOnline = false;
+                $this->__setNewValue("BEOPower", false);
+                $this->SendDebug(__FUNCTION__, "Source GET Off!", 0);
+
+                return;
             }
         }
 
-        if (@$command["primaryExperience"]["id"])
-        {
-            foreach ($this->Sources as $c)
-            {
-                if ($command["primaryExperience"]["id"]==$c["id"])
-                {
-                    $this->__setNewValue("BEOSources",$c["count"]);
+        if (@$command["primaryExperience"]["id"]) {
+            foreach ($this->Sources as $c) {
+                if ($command["primaryExperience"]["id"] == $c["id"]) {
+                    $this->__setNewValue("BEOSources", $c["count"]);
                 }
-            }            
+            }
         }
 
-        if (@$command["primaryExperience"]["source"]["friendlyName"])
-            $source=$command["primaryExperience"]["source"]["friendlyName"];
-        if (@$command["primaryExperience"]["source"]["product"]["friendlyName"])
-            $link=$command["primaryExperience"]["source"]["product"]["friendlyName"];
-
-        
-        if ($this->jid==@$command["primaryExperience"]["source"]["product"]["jid"])
-        {
-            $this->__setNewValue("BEOSource",$source);
+        if (@$command["primaryExperience"]["source"]["friendlyName"]) {
+            $source = $command["primaryExperience"]["source"]["friendlyName"];
         }
-        else
-            $this->__setNewValue("BEOSource",$link." -> ".$source);
-        $this->BeoOnline=TRUE;
-        $this->__setNewValue("BEOPower",True);
+
+        if (@$command["primaryExperience"]["source"]["product"]["friendlyName"]) {
+            $link = $command["primaryExperience"]["source"]["product"]["friendlyName"];
+        }
+
+        if ($this->jid == @$command["primaryExperience"]["source"]["product"]["jid"]) {
+            $this->__setNewValue("BEOSource", $source);
+        } else {
+            $this->__setNewValue("BEOSource", $link . " -> " . $source);
+        }
+
+        $this->BeoOnline = true;
+        $this->__setNewValue("BEOPower", true);
 
     }
 
-    protected function getDevice()
-    {       
-        $body=$this->__sendCommand("BeoDevice","","GET");
-        $js=explode("\n",$body);
-        foreach ( $js as $j)
-        {
-            if (@$j[0]=='{')
-            {
-                $source="";
-                $link="";
-                $command = json_decode(trim(utf8_decode($j)),TRUE);   
-                if (@$command["beoDevice"]["productId"]["productFriendlyName"]["productFriendlyName"])
-                    $this->BeoName=$command["primaryExperience"]["source"]["friendlyName"];
-                if (@$command["beoDevice"]["productId"]["itemNumber"])
-                {
+    protected function _getDevice()
+    {
+        $body = $this->__sendCommand("BeoDevice", "", "GET");
+        $js = explode("\n", $body);
+        foreach ($js as $j) {
+            if (@$j[0] == '{') {
+                $source = "";
+                $link = "";
+                $command = json_decode(trim(utf8_decode($j)), true);
+                if (@$command["beoDevice"]["productId"]["productFriendlyName"]["productFriendlyName"]) {
+                    $this->BeoName = $command["primaryExperience"]["source"]["friendlyName"];
+                }
+
+                if (@$command["beoDevice"]["productId"]["itemNumber"]) {
                     //2702.1200268.25611490@products.bang-olufsen.com
-                    $this->jid=$command["beoDevice"]["productId"]["typeNumber"].".".
-                    $command["beoDevice"]["productId"]["itemNumber"].".".
-                    $command["beoDevice"]["productId"]["serialNumber"]."@products.bang-olufsen.com";
+                    $this->jid = $command["beoDevice"]["productId"]["typeNumber"] . "." .
+                        $command["beoDevice"]["productId"]["itemNumber"] . "." .
+                        $command["beoDevice"]["productId"]["serialNumber"] . "@products.bang-olufsen.com";
 
                     //IPS_LogMessage("B&O Device", $this->jid);
                 }
-                $this->__setNewValue("BEOSource",$link." -> ".$source);
+                $this->__setNewValue("BEOSource", $link . " -> " . $source);
             }
-        }      
+        }
     }
 
-    protected function getActiveSources()
+    protected function _getActiveSources()
     {
-        $body=$this->__sendCommand("BeoZone/Zone/ActiveSources/","","GET");
-        $js=explode("\n",$body);
-        foreach ( $js as $j)
-        {
-            if (@$j[0]=='{')
-            {                
-                $command = json_decode(trim(utf8_decode($j)),TRUE);   
+        $body = $this->__sendCommand("BeoZone/Zone/ActiveSources/", "", "GET");
+        $js = explode("\n", $body);
+        foreach ($js as $j) {
+            if (@$j[0] == '{') {
+                $command = json_decode(trim(utf8_decode($j)), true);
                 $this->setBeoSource($command);
             }
-        }        
+        }
     }
 
-    protected function getSources()
+    protected function _getSources()
     {
-        $SourcesReturn=Array();
-        $body=$this->__sendCommand("BeoZone/Zone/Sources/","","GET");
-        $js=explode("\n",$body);
-        foreach ( $js as $j)
-        {
-            if ($j[0]=='{')
-            {
+        $SourcesReturn = array();
+        $body = $this->__sendCommand("BeoZone/Zone/Sources/", "", "GET");
+        $js = explode("\n", $body);
+        foreach ($js as $j) {
+            if ($j[0] == '{') {
                 $this->getDevice();
-                
-                $command = json_decode(trim(utf8_decode($j)),TRUE);  
-                $count=0;
-                foreach ($command["sources"] as $source)
-                {
-                    $source=$source[1];
-                    $id=$source["id"];
-                    $friendlyName=$source["friendlyName"];
-                    $pfn=$source["product"]["friendlyName"];
-                    $pjid=$source["product"]["jid"];
-                    if ($pjid!=$this->jid)
-                        $friendlyName=$pfn."  ".$friendlyName;
-                    $add= Array("count"=>$count, "id"=>$id, "name"=>$friendlyName, "jid"=>$pjid);
+
+                $command = json_decode(trim(utf8_decode($j)), true);
+                $count = 0;
+                foreach ($command["sources"] as $source) {
+                    $source = $source[1];
+                    $id = $source["id"];
+                    $friendlyName = $source["friendlyName"];
+                    $pfn = $source["product"]["friendlyName"];
+                    $pjid = $source["product"]["jid"];
+                    if ($pjid != $this->jid) {
+                        $friendlyName = $pfn . "  " . $friendlyName;
+                    }
+
+                    $add = array("count" => $count, "id" => $id, "name" => $friendlyName, "jid" => $pjid);
                     array_push($SourcesReturn,
                         $add
                     );
@@ -141,57 +133,58 @@ class BangOlufsenDeviceBase extends IPSModule
                 }
             }
         }
-        $this->SendDebug(__FUNCTION__,"Sources List ".print_r($SourcesReturn,TRUE),0);
+        $this->SendDebug(__FUNCTION__, "Sources List " . print_r($SourcesReturn, true), 0);
         return $SourcesReturn;
     }
 
-    protected function getVolume()
+    protected function _getVolume()
     {
-        $body=$this->__sendCommand("BeoZone/Zone/Sound/Volume","","GET");
-        $js=explode("\n",$body);
-        foreach ( $js as $j)
-        {
-            if ($j[0]=='{')
-            {
-                $max=0;
-                $min=0;
-                $level=0;
-                $muted=FALSE;
-                $command = json_decode(trim(utf8_decode($j)),TRUE);   
-                if (@$command["volume"]["speaker"]["range"]["maximum"])
-                    $max=$command["volume"]["speaker"]["range"]["maximum"];
-                if (@$command["volume"]["speaker"]["range"]["minimum"])
-                    $min=$command["volume"]["speaker"]["range"]["minimum"];
-                if (@$command["volume"]["speaker"]["level"])
-                    $level=$command["volume"]["speaker"]["level"];
-                if (@$command["volume"]["speaker"]["muted"])
-                {
-                    $muted=$command["volume"]["speaker"]["muted"];
+        $body = $this->__sendCommand("BeoZone/Zone/Sound/Volume", "", "GET");
+        $js = explode("\n", $body);
+        foreach ($js as $j) {
+            if ($j[0] == '{') {
+                $max = 0;
+                $min = 0;
+                $level = 0;
+                $muted = false;
+                $command = json_decode(trim(utf8_decode($j)), true);
+                if (@$command["volume"]["speaker"]["range"]["maximum"]) {
+                    $max = $command["volume"]["speaker"]["range"]["maximum"];
                 }
-                $this->setVolume($level, $min, $max, $muted);                
+
+                if (@$command["volume"]["speaker"]["range"]["minimum"]) {
+                    $min = $command["volume"]["speaker"]["range"]["minimum"];
+                }
+
+                if (@$command["volume"]["speaker"]["level"]) {
+                    $level = $command["volume"]["speaker"]["level"];
+                }
+
+                if (@$command["volume"]["speaker"]["muted"]) {
+                    $muted = $command["volume"]["speaker"]["muted"];
+                }
+                $this->setVolume($level, $min, $max, $muted);
             }
-        }        
+        }
     }
     /*
-    * @property int $level 
-    * @property int $min 
-    * @property int $max 
-    */
-    protected function setVolume($level, $min, $max, $muted=FALSE)
+     * @property int $level
+     * @property int $min
+     * @property int $max
+     */
+    protected function _setVolume($level, $min, $max, $muted = false)
     {
-        $this->VolumeMin=$min;
-        $this->VolumeMax=$max;
-                               
-        $new=round(($level - $min) * 100) / ($max - $min);
-                                 
-        $this->__setNewValue("BEOVolume",$new);
-        $this->BeoMuted=$muted;
-        $this->__setNewValue("BEOMute",$this->BeoMuted);
+        $this->VolumeMin = $min;
+        $this->VolumeMax = $max;
+
+        $new = round(($level - $min) * 100) / ($max - $min);
+
+        $this->__setNewValue("BEOVolume", $new);
+        $this->BeoMuted = $muted;
+        $this->__setNewValue("BEOMute", $this->BeoMuted);
     }
 
-    
-
-    /**     
+    /**
      * @access public
      * @param string $name Propertyname
      * @return mixed Value of Name
@@ -200,7 +193,7 @@ class BangOlufsenDeviceBase extends IPSModule
     {
         return unserialize($this->GetBuffer($name));
     }
-    /**     
+    /**
      * @access public
      * @param string $name Propertyname
      * @param mixed Value of Name
@@ -210,51 +203,52 @@ class BangOlufsenDeviceBase extends IPSModule
         $this->SetBuffer($name, serialize($value));
     }
 
-    protected function __sendCommand($url, $data,$type="POST")
+    protected function _sendCommand($url, $data, $type = "POST")
     {
         $ch = curl_init();
         $timeout = 5;
-        curl_setopt($ch, CURLOPT_URL, "http://".$this->ReadPropertyString('IP').":".$this->ReadPropertyInteger('Port')."/". $url);
+        curl_setopt($ch, CURLOPT_URL, "http://" . $this->ReadPropertyString('IP') . ":" . $this->ReadPropertyInteger('Port') . "/" . $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
         curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US) AppleWebKit/525.13 (KHTML, like Gecko) Chrome/0.A.B.C Safari/525.13');
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            'Content-Type: application/json'
+            'Content-Type: application/json',
         ));
 
-        if ($type=="POST") 
-        {
+        if ($type == "POST") {
             curl_setopt($ch, CURLOPT_POST, true);
-            if (@$data)
-            {
-                curl_setopt($ch, CURLOPT_POSTFIELDS,$data);
+            if (@$data) {
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
             }
         }
-        if ($type=="PUT") { 
+        if ($type == "PUT") {
 
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
-            curl_setopt($ch, CURLOPT_POSTFIELDS,$data);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         }
-        
+
         $file_content = curl_exec($ch);
-        $this->SendDebug(__FUNCTION__,"CURL URL: http://".$this->ReadPropertyString('IP').":".$this->ReadPropertyInteger('Port')."/". $url,0);
-        $this->SendDebug(__FUNCTION__,"CURL return: ".$file_content,0);
-        if($errno = curl_errno($ch)) {
+        $this->SendDebug(__FUNCTION__, "CURL URL: http://" . $this->ReadPropertyString('IP') . ":" . $this->ReadPropertyInteger('Port') . "/" . $url, 0);
+        $this->SendDebug(__FUNCTION__, "CURL return: " . $file_content, 0);
+        if ($errno = curl_errno($ch)) {
             $error_message = curl_strerror($errno);
-            $this->SendDebug(__FUNCTION__,"CURL error: ({$errno}):\n {$error_message}",0);
+            $this->SendDebug(__FUNCTION__, "CURL error: ({$errno}):\n {$error_message}", 0);
         }
         curl_close($ch);
         return $file_content;
     }
 
-    protected function __setNewValue($name, $value)
+    protected function _setNewValue($name, $value)
     {
         $sid = @IPS_GetObjectIDByIdent($name, $this->InstanceID);
-       // $this->SendDebug(__FUNCTION__, "SV: ".$name." -> ".$sid." -> ".$value,0);
-        if ($sid) SetValue($sid, $value);
+        // $this->SendDebug(__FUNCTION__, "SV: ".$name." -> ".$sid." -> ".$value,0);
+        if ($sid) {
+            SetValue($sid, $value);
+        }
+
     }
-    
-    protected function __CreateCategory($Name, $Ident = '', $ParentID = 0)
+
+    protected function _CreateCategory($Name, $Ident = '', $ParentID = 0)
     {
         $RootCategoryID = $this->InstanceID;
         IPS_LogMessage("Visonic DEBUG", "CreateCategory: ( $Name, $Ident, $ParentID ) \n");
@@ -279,7 +273,7 @@ class BangOlufsenDeviceBase extends IPSModule
         return $CatID;
     }
 
-    protected function __CreateVariable($Name, $Type, $Value, $Ident = '', $ParentID = 0)
+    protected function _CreateVariable($Name, $Type, $Value, $Ident = '', $ParentID = 0)
     {
         IPS_LogMessage("Visonic DEBUG", "CreateVariable: ( $Name, $Type, $Value, $Ident, $ParentID ) \n");
         if ('' != $Ident) {
@@ -310,7 +304,7 @@ class BangOlufsenDeviceBase extends IPSModule
         return $VarID;
     }
 
-    protected function __SetVariable($VarID, $Type, $Value)
+    protected function _SetVariable($VarID, $Type, $Value)
     {
         switch ($Type) {
             case 0: // boolean
@@ -327,72 +321,77 @@ class BangOlufsenDeviceBase extends IPSModule
                 break;
         }
     }
-    protected function RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize) {
-        
-        if(!IPS_VariableProfileExists($Name)) {
+    protected function _RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize)
+    {
+
+        if (!IPS_VariableProfileExists($Name)) {
             IPS_CreateVariableProfile($Name, 1);
         } else {
             $profile = IPS_GetVariableProfile($Name);
-            if($profile['ProfileType'] != 1)
-            throw new Exception("Variable profile type does not match for profile ".$Name);
+            if ($profile['ProfileType'] != 1) {
+                throw new Exception("Variable profile type does not match for profile " . $Name);
+            }
+
         }
-        
+
         IPS_SetVariableProfileIcon($Name, $Icon);
         IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
         IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);
-        
+
     }
-    protected function RegisterProfileIntegerEx($Name, $Icon, $Prefix, $Suffix, $Associations) {
-        if ( sizeof($Associations) === 0 ){
+    protected function _RegisterProfileIntegerEx($Name, $Icon, $Prefix, $Suffix, $Associations)
+    {
+        if (sizeof($Associations) === 0) {
             $MinValue = 0;
             $MaxValue = 0;
         } else {
             $MinValue = $Associations[0][0];
-            $MaxValue = $Associations[sizeof($Associations)-1][0];
+            $MaxValue = $Associations[sizeof($Associations) - 1][0];
         }
-        
+
         $this->RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, 0);
-        
-        foreach($Associations as $Association) {
+
+        foreach ($Associations as $Association) {
             IPS_SetVariableProfileAssociation($Name, $Association[0], $Association[1], $Association[2], $Association[3]);
         }
-        
+
     }
-    protected function RegisterTimerNow($Ident, $Milliseconds, $Action) {
+    protected function _RegisterTimerNow($Ident, $Milliseconds, $Action)
+    {
         //search for already available scripts with proper ident
         $eid = @IPS_GetObjectIDByIdent($Ident, $this->InstanceID);
         //properly update eventID
-        if($eid === false) {
-                $eid = 0;
-        } else if(IPS_GetEvent($eid)['EventType'] <> 1) {
-                IPS_DeleteEvent($eid);
-                $eid = 0;
+        if ($eid === false) {
+            $eid = 0;
+        } elseif (IPS_GetEvent($eid)['EventType'] != 1) {
+            IPS_DeleteEvent($eid);
+            $eid = 0;
         }
         //we need to create one
         if ($eid == 0) {
-                $eid = IPS_CreateEvent(1);
-                IPS_SetParent($eid, $this->InstanceID);
-                IPS_SetIdent($eid, $Ident);
-                IPS_SetName($eid, $Ident);
-                IPS_SetHidden($eid, true);
+            $eid = IPS_CreateEvent(1);
+            IPS_SetParent($eid, $this->InstanceID);
+            IPS_SetIdent($eid, $Ident);
+            IPS_SetName($eid, $Ident);
+            IPS_SetHidden($eid, true);
+            IPS_SetEventScript($eid, $Action);
+        } else {
+            if (IPS_GetEvent($eid)['EventScript'] != $Action) {
                 IPS_SetEventScript($eid, $Action);
-        } else {
-                if(IPS_GetEvent($eid)['EventScript'] != $Action) {
-                        IPS_SetEventScript($eid, $Action);
-                }
+            }
         }
-        if($Milliseconds > 0) {
-                $now = time();
-                $Hour = date("H",$now);
-                $Minute = date("i",$now);
-                $Second = date("s",$now);                    
-                IPS_SetEventCyclicTimeFrom($eid, $Hour, $Minute, $Second);
-                IPS_SetEventCyclic($eid, 0, 0, 0, 0, 1, round($Milliseconds/1000));
-                IPS_SetEventActive($eid, true);
+        if ($Milliseconds > 0) {
+            $now = time();
+            $Hour = date("H", $now);
+            $Minute = date("i", $now);
+            $Second = date("s", $now);
+            IPS_SetEventCyclicTimeFrom($eid, $Hour, $Minute, $Second);
+            IPS_SetEventCyclic($eid, 0, 0, 0, 0, 1, round($Milliseconds / 1000));
+            IPS_SetEventActive($eid, true);
         } else {
-                IPS_SetEventActive($eid, false);
+            IPS_SetEventActive($eid, false);
         }
-}
+    }
 
 }
 /** @} */
