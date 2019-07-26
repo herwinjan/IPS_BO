@@ -125,7 +125,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
             $this->_openConnection();
         }
 
-        $this->RegisterTimerNow('Ping', 5000, 'BEO_KeepAlive(' . $this->InstanceID . ');');
+        $this->_RegisterTimerNow('Ping', 5000, 'BEO_KeepAlive(' . $this->InstanceID . ');');
 
     }
 
