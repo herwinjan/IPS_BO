@@ -279,7 +279,7 @@ class BangOlufsenDeviceBase extends IPSModule
         if ('' != $Ident) {
             $VarID = @IPS_GetObjectIDByIdent($Ident, $ParentID);
             if (false !== $VarID) {
-                $this->__SetVariable($VarID, $Type, $Value);
+                $this->_SetVariable($VarID, $Type, $Value);
                 return $VarID;
             }
         }
@@ -289,7 +289,7 @@ class BangOlufsenDeviceBase extends IPSModule
             if (2 == $Obj['ObjectType']) { // is variable?
                 $Var = IPS_GetVariable($VarID);
                 if ($Type == $Var['VariableValue']['ValueType']) {
-                    $this->__SetVariable($VarID, $Type, $Value);
+                    $this->_SetVariable($VarID, $Type, $Value);
                     return $VarID;
                 }
             }
@@ -300,7 +300,7 @@ class BangOlufsenDeviceBase extends IPSModule
         if ('' != $Ident) {
             IPS_SetIdent($VarID, $Ident);
         }
-        $this->__SetVariable($VarID, $Type, $Value);
+        $this->_SetVariable($VarID, $Type, $Value);
         return $VarID;
     }
 
