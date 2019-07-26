@@ -21,7 +21,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         // Diese Zeile nicht löschen
         parent::Create();
 
-        $this->RegisterProfileIntegerEx("Status.BEO", "Information", "", "", array(
+        $this->_RegisterProfileIntegerEx("Status.BEO", "Information", "", "", array(
             array(0, "prev", "", -1),
             array(1, "play", "", -1),
             array(2, "pause", "", -1),
@@ -29,8 +29,8 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
             array(4, "next", "", -1),
         ));
 
-        $this->RegisterProfileInteger("Volume.BEO", "Intensity", "", " %", 0, 100, 1);
-        $this->RegisterProfileIntegerEx("Switch.BEO", "Information", "", "", array(
+        $this->_RegisterProfileInteger("Volume.BEO", "Intensity", "", " %", 0, 100, 1);
+        $this->_RegisterProfileIntegerEx("Switch.BEO", "Information", "", "", array(
             array(0, "Off", "", 0xFF0000),
             array(1, "On", "", 0x00FF00))
         );
@@ -38,19 +38,19 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
             IPS_CreateVariableProfile("Sources.BEO", 1);
         }
 
-        $id = $this->__CreateVariable("Status", 1, 0, "BEOStatus", $this->InstanceID);
+        $id = $this->_CreateVariable("Status", 1, 0, "BEOStatus", $this->InstanceID);
         IPS_SetVariableCustomProfile($id, "Status.BEO");
-        $id = $this->__CreateVariable("Source", 3, "", "BEOSource", $this->InstanceID);
-        $id = $this->__CreateVariable("Sources", 1, 0, "BEOSources", $this->InstanceID);
+        $id = $this->_CreateVariable("Source", 3, "", "BEOSource", $this->InstanceID);
+        $id = $this->_CreateVariable("Sources", 1, 0, "BEOSources", $this->InstanceID);
         IPS_SetVariableCustomProfile($id, "Sources.BEO");
-        $id = $this->__CreateVariable("Volume", 1, 0, "BEOVolume", $this->InstanceID);
+        $id = $this->_CreateVariable("Volume", 1, 0, "BEOVolume", $this->InstanceID);
         IPS_SetVariableCustomProfile($id, "Volume.BEO");
-        $id = $this->__CreateVariable("Song", 3, "", "BEOSong", $this->InstanceID);
-        $id = $this->__CreateVariable("Artiest", 3, "", "BEOArtist", $this->InstanceID);
-        $id = $this->__CreateVariable("Voorgang", 3, "", "BEOLoc", $this->InstanceID);
-        $id = $this->__CreateVariable("Power", 0, false, "BEOPower", $this->InstanceID);
+        $id = $this->_CreateVariable("Song", 3, "", "BEOSong", $this->InstanceID);
+        $id = $this->_CreateVariable("Artiest", 3, "", "BEOArtist", $this->InstanceID);
+        $id = $this->_CreateVariable("Voorgang", 3, "", "BEOLoc", $this->InstanceID);
+        $id = $this->_CreateVariable("Power", 0, false, "BEOPower", $this->InstanceID);
         IPS_SetVariableCustomProfile($id, "~Switch");
-        $id = $this->__CreateVariable("Mute", 0, false, "BEOMuted", $this->InstanceID);
+        $id = $this->_CreateVariable("Mute", 0, false, "BEOMuted", $this->InstanceID);
         IPS_SetVariableCustomProfile($id, "~Switch");
 
         $this->EnableAction("BEOVolume");
@@ -75,7 +75,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
     public function ApplyChanges()
     {
         $this->online = false;
-        $this->closeConnection();
+        $this->_closeConnection();
         $this->State = 10;
         parent::ApplyChanges();
 
@@ -106,7 +106,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
                 IPS_DeleteVariableProfile("Sources.BEO");
             }
 
-            $this->Sources = $this->getSources();
+            $this->Sources = $this->_getSources();
             IPS_CreateVariableProfile("Sources.BEO", 1);
             foreach ($this->Sources as $source) {
                 $this->SendDebug(__FUNCTION__, "Add Profile ({$source["id"]}) " . $source["name"], 0);
@@ -117,12 +117,12 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
             //$this->__SetVariable("BEOSources",1,1);
 
             //$this->getDevice();
-            $this->getActiveSources();
-            $this->getVolume();
+            $this->_getActiveSources();
+            $this->_getVolume();
             parent::ApplyChanges();
 
             $this->online = true;
-            $this->openConnection();
+            $this->_openConnection();
         }
 
         $this->RegisterTimerNow('Ping', 5000, 'BEO_KeepAlive(' . $this->InstanceID . ');');
@@ -139,7 +139,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
             $this->SendDataToParent($JsonString);
             $this->SendDebug(__FUNCTION__, "Send KeepAlive", 0);
         } else {
-            $this->openConnection();
+            $this->_openConnection();
             $this->SendDebug(__FUNCTION__, "Session closed?? reopen!", 0);
         }
     }
@@ -152,10 +152,10 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
                 $min = $this->VolumeMin;
                 $vols = round((($value * ($max - $min) / 100) + $min));
 
-                $this->__sendCommand('BeoZone/Zone/Sound/Volume/Speaker/Level', json_encode(array("level" => $vols)), "PUT");
+                $this->_sendCommand('BeoZone/Zone/Sound/Volume/Speaker/Level', json_encode(array("level" => $vols)), "PUT");
                 break;
             case "BEOMuted":
-                $this->__sendCommand('BeoZone/Zone/Sound/Volume/Speaker/Muted', json_encode(array("muted" => $value)), "PUT");
+                $this->_sendCommand('BeoZone/Zone/Sound/Volume/Speaker/Muted', json_encode(array("muted" => $value)), "PUT");
                 $this->BeoMuted = $value;
                 $this->__setNewValue("BEOMuted", $value);
                 break;
@@ -163,12 +163,12 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
                 if ($value == false) {
                     $str = array("standby" => array("powerState" => "standby"));
 
-                    $this->__sendCommand("BeoDevice/powerManagement/standby", json_encode($str), "PUT");
+                    $this->_sendCommand("BeoDevice/powerManagement/standby", json_encode($str), "PUT");
                     $this->BeoOnline = false;
-                    $this->__setNewValue("BEOPower", false);
+                    $this->_setNewValue("BEOPower", false);
                 } else {
-                    $this->__sendCommand("BeoZone/Zone/Stream/Play", array(), "POST");
-                    $this->__setNewValue("BEOPower", true);
+                    $this->_sendCommand("BeoZone/Zone/Stream/Play", array(), "POST");
+                    $this->_setNewValue("BEOPower", true);
                     $this->BeoOnline = true;
                 }
                 break;
@@ -177,7 +177,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
 
                 foreach ($this->Sources as $c) {
                     if ($c["count"] == $value) {
-                        $this->__sendCommand("BeoZone/Zone/ActiveSources", json_encode(array("primaryExperience" => array("source" => array("id" => $c["id"])))), "POST");
+                        $this->_sendCommand("BeoZone/Zone/ActiveSources", json_encode(array("primaryExperience" => array("source" => array("id" => $c["id"])))), "POST");
                         $this->SendDebug(__FUNCTION__, "Select Source: " . $c["name"] . " => " . json_encode(array("primaryExperience" => array("source" => array("id" => $c["id"])))), 0);
 
                         //self._postReq('POST','', {"primaryExperience":{"source":{"id":chosenSource}}})
@@ -189,25 +189,25 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
             case "BEOStatus":
                 switch ($value) {
                     case 0: // prev
-                        $this->__sendCommand("BeoZone/Zone/Stream/Backward", "");
-                        $this->__sendCommand("BeoZone/Zone/Stream/Backward/Release", "");
+                        $this->_sendCommand("BeoZone/Zone/Stream/Backward", "");
+                        $this->_sendCommand("BeoZone/Zone/Stream/Backward/Release", "");
                         break;
 
                     case 1: // play
-                        $this->__sendCommand("BeoZone/Zone/Stream/Play", "");
-                        $this->__sendCommand("BeoZone/Zone/Stream/Play/Release", "");
+                        $this->_sendCommand("BeoZone/Zone/Stream/Play", "");
+                        $this->_sendCommand("BeoZone/Zone/Stream/Play/Release", "");
                         break;
                     case 2: // pause
-                        $this->__sendCommand("BeoZone/Zone/Stream/Pause", "");
-                        $this->__sendCommand("BeoZone/Zone/Stream/Pause/Release", "");
+                        $this->_sendCommand("BeoZone/Zone/Stream/Pause", "");
+                        $this->_sendCommand("BeoZone/Zone/Stream/Pause/Release", "");
                         break;
                     case 3: // stop
-                        $this->__sendCommand("BeoZone/Zone/Stream/Stop", "");
-                        $this->__sendCommand("BeoZone/Zone/Stream/Stop/Release", "");
+                        $this->_sendCommand("BeoZone/Zone/Stream/Stop", "");
+                        $this->_sendCommand("BeoZone/Zone/Stream/Stop/Release", "");
                         break;
                     case 4: // next
-                        $this->__sendCommand("BeoZone/Zone/Stream/Forward", "");
-                        $this->__sendCommand("BeoZone/Zone/Stream/Forward/Release", "");
+                        $this->_sendCommand("BeoZone/Zone/Stream/Forward", "");
+                        $this->_sendCommand("BeoZone/Zone/Stream/Forward/Release", "");
                         break;
                 }
                 break;
@@ -230,7 +230,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
                 $this->SendDataToParent($JsonString);
             }
             if ($Data[0] == 200) {
-                $this->__setNewValue("BEOStatus", 3);
+                $this->_setNewValue("BEOStatus", 3);
                 if ($this->online) {
                     $this->restartConnection();
                 }
@@ -270,53 +270,53 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
 
                 switch ($command["notification"]["type"]) {
                     case "SOURCE":
-                        $this->setBeoSource($command["notification"]["data"]);
+                        $this->_setBeoSource($command["notification"]["data"]);
 
                         break;
                     case "NOW_PLAYING_STORED_MUSIC":
                         if (@count($command["notification"]["data"]) > 0) {
                             $this->Type = 1;
-                            $this->__setNewValue("BEOSong", $command["notification"]["data"]["name"]);
-                            $this->__setNewValue("BEOArtist", $command["notification"]["data"]["artist"]);
+                            $this->_setNewValue("BEOSong", $command["notification"]["data"]["name"]);
+                            $this->_setNewValue("BEOArtist", $command["notification"]["data"]["artist"]);
                         } else {
-                            $this->__setNewValue("BEOSong", "");
-                            $this->__setNewValue("BEOArtist", "");
+                            $this->_setNewValue("BEOSong", "");
+                            $this->_setNewValue("BEOArtist", "");
                         }
                         break;
                     case "NOW_PLAYING_NET_RADIO":
                         if (@count($command["notification"]["data"]) > 0) {
                             $this->Type = 2;
-                            $this->__setNewValue("BEOSong", $command["notification"]["data"]["name"]);
-                            $this->__setNewValue("BEOArtist", $command["notification"]["data"]["liveDescription"]);
+                            $this->_setNewValue("BEOSong", $command["notification"]["data"]["name"]);
+                            $this->_setNewValue("BEOArtist", $command["notification"]["data"]["liveDescription"]);
                         } else {
-                            $this->__setNewValue("BEOSong", "");
-                            $this->__setNewValue("BEOArtist", "");
+                            $this->_setNewValue("BEOSong", "");
+                            $this->_setNewValue("BEOArtist", "");
                         }
                         break;
                     case "NOW_PLAYING_ENDED":
 
                         $this->Type = 0;
 
-                        $this->__setNewValue("BEOSong", "");
-                        $this->__setNewValue("BEOArtist", "");
+                        $this->_setNewValue("BEOSong", "");
+                        $this->_setNewValue("BEOArtist", "");
 
                         break;
                     case "SHUTDOWN":
                         if ($command["notification"]["data"]["reason"] == "standby") {
                             $this->Type = 0;
-                            $this->__setNewValue("BEOSong", "");
-                            $this->__setNewValue("BEOArtist", "");
-                            $this->__setNewValue("BEOLoc", "");
-                            $this->__setNewValue("BEOSource", "Shutdown");
-                            $this->__setStatus("stop");
-                            $this->__setNewValue("BEOPower", false);
+                            $this->_setNewValue("BEOSong", "");
+                            $this->_setNewValue("BEOArtist", "");
+                            $this->_setNewValue("BEOLoc", "");
+                            $this->_setNewValue("BEOSource", "Shutdown");
+                            $this->_setStatus("stop");
+                            $this->_setNewValue("BEOPower", false);
                         }
                         break;
                     case "NUMBER_AND_NAME":
-                        $this->__setNewValue("BEOSong", $command["notification"]["data"]["name"]);
+                        $this->_setNewValue("BEOSong", $command["notification"]["data"]["name"]);
                         break;
                     case "PROGRESS_INFORMATION";
-                        $this->__setStatus($command["notification"]["data"]["state"]);
+                        $this->_setStatus($command["notification"]["data"]["state"]);
                         if ($this->Type == 1) {
                             $pos = 0;
                             $tot = 0;
@@ -329,11 +329,11 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
                             }
 
                             if ($tot > 0) {
-                                $this->__setNewValue("BEOLoc", date('i:s', $pos) . "/" . date('i:s', $tot));
+                                $this->_setNewValue("BEOLoc", date('i:s', $pos) . "/" . date('i:s', $tot));
                             }
 
                         } else {
-                            $this->__setNewValue("BEOLoc", "");
+                            $this->_setNewValue("BEOLoc", "");
                         }
 
                         break;
@@ -342,7 +342,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
                         $min = $command["notification"]["data"]["speaker"]["range"]["minimum"];
                         $max = $command["notification"]["data"]["speaker"]["range"]["maximum"];
                         $mute = $command["notification"]["data"]["speaker"]["muted"];
-                        $this->setVolume($level, $min, $max, $mute);
+                        $this->_setVolume($level, $min, $max, $mute);
                         break;
 
                 }
@@ -351,7 +351,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         }
     }
 
-    private function __setStatus($state)
+    protected function _setStatus($state)
     {
         $st = 3;
         switch ($state) {
@@ -365,7 +365,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
                 $st = 1;
                 break;
         }
-        $this->__setNewValue("BEOStatus", $st);
+        $this->_setNewValue("BEOStatus", $st);
     }
 
     protected function _closeConnection()
@@ -388,10 +388,10 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
 
     protected function _restartConnection()
     {
-        $this->closeConnection();
+        $this->_closeConnection();
         IPS_Sleep(2000);
         IPS_Sleep(2000);
-        $this->openConnection();
+        $this->_openConnection();
     }
 
     private function __GetParentID()

@@ -23,7 +23,7 @@ class BangOlufsenDeviceBase extends IPSModule
 
         if (count($command) <= 0) {
             $this->BeoOnline = false;
-            $this->__setNewValue("BEOPower", false);
+            $this->_setNewValue("BEOPower", false);
             $this->SendDebug(__FUNCTION__, "Source live Off!", 0);
             return;
         }
@@ -31,7 +31,7 @@ class BangOlufsenDeviceBase extends IPSModule
         if (@$command["activeSources"]["primary"]) {
             if (@$command["activeSources"]["primary"] == "") {
                 $this->BeoOnline = false;
-                $this->__setNewValue("BEOPower", false);
+                $this->_setNewValue("BEOPower", false);
                 $this->SendDebug(__FUNCTION__, "Source GET Off!", 0);
 
                 return;
@@ -41,7 +41,7 @@ class BangOlufsenDeviceBase extends IPSModule
         if (@$command["primaryExperience"]["id"]) {
             foreach ($this->Sources as $c) {
                 if ($command["primaryExperience"]["id"] == $c["id"]) {
-                    $this->__setNewValue("BEOSources", $c["count"]);
+                    $this->_setNewValue("BEOSources", $c["count"]);
                 }
             }
         }
@@ -55,19 +55,19 @@ class BangOlufsenDeviceBase extends IPSModule
         }
 
         if ($this->jid == @$command["primaryExperience"]["source"]["product"]["jid"]) {
-            $this->__setNewValue("BEOSource", $source);
+            $this->_setNewValue("BEOSource", $source);
         } else {
-            $this->__setNewValue("BEOSource", $link . " -> " . $source);
+            $this->_setNewValue("BEOSource", $link . " -> " . $source);
         }
 
         $this->BeoOnline = true;
-        $this->__setNewValue("BEOPower", true);
+        $this->_setNewValue("BEOPower", true);
 
     }
 
     protected function _getDevice()
     {
-        $body = $this->__sendCommand("BeoDevice", "", "GET");
+        $body = $this->_sendCommand("BeoDevice", "", "GET");
         $js = explode("\n", $body);
         foreach ($js as $j) {
             if (@$j[0] == '{') {
@@ -86,14 +86,14 @@ class BangOlufsenDeviceBase extends IPSModule
 
                     //IPS_LogMessage("B&O Device", $this->jid);
                 }
-                $this->__setNewValue("BEOSource", $link . " -> " . $source);
+                $this->_setNewValue("BEOSource", $link . " -> " . $source);
             }
         }
     }
 
     protected function _getActiveSources()
     {
-        $body = $this->__sendCommand("BeoZone/Zone/ActiveSources/", "", "GET");
+        $body = $this->_sendCommand("BeoZone/Zone/ActiveSources/", "", "GET");
         $js = explode("\n", $body);
         foreach ($js as $j) {
             if (@$j[0] == '{') {
@@ -106,11 +106,11 @@ class BangOlufsenDeviceBase extends IPSModule
     protected function _getSources()
     {
         $SourcesReturn = array();
-        $body = $this->__sendCommand("BeoZone/Zone/Sources/", "", "GET");
+        $body = $this->_sendCommand("BeoZone/Zone/Sources/", "", "GET");
         $js = explode("\n", $body);
         foreach ($js as $j) {
             if ($j[0] == '{') {
-                $this->getDevice();
+                $this->_getDevice();
 
                 $command = json_decode(trim(utf8_decode($j)), true);
                 $count = 0;
@@ -139,7 +139,7 @@ class BangOlufsenDeviceBase extends IPSModule
 
     protected function _getVolume()
     {
-        $body = $this->__sendCommand("BeoZone/Zone/Sound/Volume", "", "GET");
+        $body = $this->_sendCommand("BeoZone/Zone/Sound/Volume", "", "GET");
         $js = explode("\n", $body);
         foreach ($js as $j) {
             if ($j[0] == '{') {
@@ -163,7 +163,7 @@ class BangOlufsenDeviceBase extends IPSModule
                 if (@$command["volume"]["speaker"]["muted"]) {
                     $muted = $command["volume"]["speaker"]["muted"];
                 }
-                $this->setVolume($level, $min, $max, $muted);
+                $this->_setVolume($level, $min, $max, $muted);
             }
         }
     }
@@ -179,9 +179,9 @@ class BangOlufsenDeviceBase extends IPSModule
 
         $new = round(($level - $min) * 100) / ($max - $min);
 
-        $this->__setNewValue("BEOVolume", $new);
+        $this->_setNewValue("BEOVolume", $new);
         $this->BeoMuted = $muted;
-        $this->__setNewValue("BEOMute", $this->BeoMuted);
+        $this->_setNewValue("BEOMute", $this->BeoMuted);
     }
 
     /**
