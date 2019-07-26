@@ -349,7 +349,7 @@ class BangOlufsenDeviceBase extends IPSModule
             $MaxValue = $Associations[sizeof($Associations) - 1][0];
         }
 
-        $this->RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, 0);
+        $this->_RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, 0);
 
         foreach ($Associations as $Association) {
             IPS_SetVariableProfileAssociation($Name, $Association[0], $Association[1], $Association[2], $Association[3]);

@@ -131,7 +131,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
 
     public function KeepAlive()
     {
-        if (IPS_GetProperty($this->GetParentID(), "Open")) {
+        if (IPS_GetProperty($this->__GetParentID(), "Open")) {
             $sendData = "2\r\n\r\n\r\n";
             $JSON['DataID'] = '{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}';
             $JSON['Buffer'] = utf8_encode($sendData);
@@ -372,16 +372,16 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
     {
         if (strlen($this->ReadPropertyString('IP')) > 0) {
             $this->online = false;
-            IPS_SetProperty($this->GetParentID(), "Open", false);
-            IPS_ApplyChanges($this->GetParentID());
+            IPS_SetProperty($this->__GetParentID(), "Open", false);
+            IPS_ApplyChanges($this->__GetParentID());
         }
     }
     protected function _openConnection()
     {
         if (strlen($this->ReadPropertyString('IP')) > 0) {
             $this->online = true;
-            IPS_SetProperty($this->GetParentID(), "Open", true);
-            IPS_ApplyChanges($this->GetParentID());
+            IPS_SetProperty($this->__GetParentID(), "Open", true);
+            IPS_ApplyChanges($this->__GetParentID());
 
         }
     }
