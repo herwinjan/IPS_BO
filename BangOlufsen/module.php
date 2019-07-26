@@ -232,7 +232,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
             if ($Data[0] == 200) {
                 $this->_setNewValue("BEOStatus", 3);
                 if ($this->online) {
-                    $this->restartConnection();
+                    $this->_restartConnection();
                 }
 
             }
