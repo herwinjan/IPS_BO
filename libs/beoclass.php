@@ -98,7 +98,7 @@ class BangOlufsenDeviceBase extends IPSModule
         foreach ($js as $j) {
             if (@$j[0] == '{') {
                 $command = json_decode(trim(utf8_decode($j)), true);
-                $this->setBeoSource($command);
+                $this->_setBeoSource($command);
             }
         }
     }
