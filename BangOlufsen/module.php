@@ -41,8 +41,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         $id = $this->_CreateVariable("Status", 1, 0, "BEOStatus", $this->InstanceID);
         IPS_SetVariableCustomProfile($id, "Status.BEO");
         $id = $this->_CreateVariable("Source", 3, "", "BEOSource", $this->InstanceID);
-        $id = $this->_CreateVariable("Sources", 1, 0, "BEOSources", $this->InstanceID);
-        IPS_SetVariableCustomProfile($id, "Sources.BEO");
+
         $id = $this->_CreateVariable("Volume", 1, 0, "BEOVolume", $this->InstanceID);
         IPS_SetVariableCustomProfile($id, "Volume.BEO");
         $id = $this->_CreateVariable("Song", 3, "", "BEOSong", $this->InstanceID);
@@ -85,6 +84,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         $this->VolumeMax = 100;
         $this->Type = 0;
         $this->jid = "";
+        $this->serial = "";
         $this->BeoName = "";
         $this->BeoOnline = false;
         $this->BeoMuted = false;
@@ -102,19 +102,23 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         $this->RegisterMessage($data['ConnectionID'], 10505);
 
         if (strlen($this->ReadPropertyString('IP')) > 0) {
-            if (IPS_VariableProfileExists("Sources.BEO")) {
-                IPS_DeleteVariableProfile("Sources.BEO");
+            $this->Sources = $this->_getSources();
+
+            if (IPS_VariableProfileExists("Sources.BEO." . $this->serial)) {
+                IPS_DeleteVariableProfile("Sources.BEO." . $this->serial);
             }
 
-            $this->Sources = $this->_getSources();
-            IPS_CreateVariableProfile("Sources.BEO", 1);
+            IPS_CreateVariableProfile("Sources.BEO." . $this->serial, 1);
             foreach ($this->Sources as $source) {
                 $this->SendDebug(__FUNCTION__, "Add Profile ({$source["id"]}) " . $source["name"], 0);
-                IPS_SetVariableProfileAssociation("Sources.BEO", $source["count"], $source["name"], "", -1);
+                IPS_SetVariableProfileAssociation("Sources.BEO." . $this->serial, $source["count"], $source["name"], "", -1);
             }
 
             $this->EnableAction("BEOSources");
             //$this->__SetVariable("BEOSources",1,1);
+
+            $id = $this->_CreateVariable("Sources", 1, 0, "BEOSources", $this->InstanceID);
+            IPS_SetVariableCustomProfile($id, "Sources.BEO." . $this->serial);
 
             //$this->getDevice();
             $this->_getActiveSources();
@@ -379,10 +383,14 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
     protected function _openConnection()
     {
         if (strlen($this->ReadPropertyString('IP')) > 0) {
-            $this->online = true;
-            IPS_SetProperty($this->__GetParentID(), "Open", true);
-            IPS_ApplyChanges($this->__GetParentID());
-
+            if (Sys_Ping($this->ReadPropertyString('IP'), 500)) {
+                $this->online = true;
+                IPS_SetProperty($this->__GetParentID(), "Open", true);
+                IPS_ApplyChanges($this->__GetParentID());
+            } else {
+                $this->SendDebug(__FUNCTION__, "Device: Offline (Ping failed)", 0);
+                $this->_closeConnection();
+            }
         }
     }
 

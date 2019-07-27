@@ -80,6 +80,7 @@ class BangOlufsenDeviceBase extends IPSModule
 
                 if (@$command["beoDevice"]["productId"]["itemNumber"]) {
                     //2702.1200268.25611490@products.bang-olufsen.com
+                    $this->serial = "" . $command["beoDevice"]["productId"]["serialNumber"] . "";
                     $this->jid = $command["beoDevice"]["productId"]["typeNumber"] . "." .
                         $command["beoDevice"]["productId"]["itemNumber"] . "." .
                         $command["beoDevice"]["productId"]["serialNumber"] . "@products.bang-olufsen.com";
