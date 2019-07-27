@@ -12,7 +12,7 @@
 		},
 		{
 			"name": "Mac",
-			"type": "NumberSpinner",
+			"type": "ValidationTextBox",
 			"caption": "Mac adress"
 		}
 	]
