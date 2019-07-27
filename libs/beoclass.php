@@ -117,11 +117,8 @@ class BangOlufsenDeviceBase extends IPSModule
                 $count = 0;
                 foreach ($command["sources"] as $_source) {
                     $source = $_source[1];
-                    if (@$source["id"]) {
-                        $id = $source["id"];
-                    } else {
-                        $id = $_source[0];
-                    }
+                    $id = $_source[0];
+
                     $friendlyName = $source["friendlyName"];
                     $pfn = $source["product"]["friendlyName"];
                     $pjid = $source["product"]["jid"];
