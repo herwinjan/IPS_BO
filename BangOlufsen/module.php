@@ -59,6 +59,7 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
 
         $this->RegisterPropertyString('IP', '');
         $this->RegisterPropertyInteger('Port', 8080);
+        $this->RegisterPropertyString('Mac', '');
 
         $this->RequireParent("{3CFF0FD9-E306-41DB-9B5A-9D06D38576C3}");
 
@@ -171,9 +172,17 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
                     $this->BeoOnline = false;
                     $this->_setNewValue("BEOPower", false);
                 } else {
-                    $this->_sendCommand("BeoZone/Zone/Stream/Play", array(), "POST");
-                    $this->_setNewValue("BEOPower", true);
-                    $this->BeoOnline = true;
+                    if (strlen($this->ReadPropertyString('IP')) > 0) {
+                        if (Sys_Ping($this->ReadPropertyString('IP'), 500)) {
+                            $this->_sendCommand("BeoZone/Zone/Stream/Play", array(), "POST");
+                            $this->_setNewValue("BEOPower", true);
+                            $this->BeoOnline = true;
+
+                        } else {
+                            $this->_wol();
+                        }
+                    }
+
                 }
                 break;
             case "BEOSources":

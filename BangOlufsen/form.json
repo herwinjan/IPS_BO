@@ -1,7 +1,19 @@
 {
-	"elements":
-	[
-		{ "name": "IP", "type": "ValidationTextBox", "caption": "Ip Adress" },
-		{ "name": "Port", "type": "NumberSpinner", "caption": "Port" }
+	"elements": [
+		{
+			"name": "IP",
+			"type": "ValidationTextBox",
+			"caption": "Ip Adress"
+		},
+		{
+			"name": "Port",
+			"type": "NumberSpinner",
+			"caption": "Port"
+		},
+		{
+			"name": "Mac",
+			"type": "NumberSpinner",
+			"caption": "Mac adress"
+		}
 	]
 }
