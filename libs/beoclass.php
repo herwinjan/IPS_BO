@@ -120,7 +120,7 @@ class BangOlufsenDeviceBase extends IPSModule
                     if (@$source["id"]) {
                         $id = $source["id"];
                     } else {
-                        $id = $_source[0][0];
+                        $id = $_source[0];
                     }
                     $friendlyName = $source["friendlyName"];
                     $pfn = $source["product"]["friendlyName"];
