@@ -407,7 +407,9 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
                 IPS_ApplyChanges($this->__GetParentID());
             } else {
                 $this->SendDebug(__FUNCTION__, "Device: Offline (Ping failed)", 0);
-                $this->_closeConnection();
+                if (IPS_GetProperty(__GetParentID(), "Open")) {
+                    $this->_closeConnection();
+                }
             }
         }
     }
