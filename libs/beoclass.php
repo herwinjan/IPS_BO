@@ -108,6 +108,10 @@ class BangOlufsenDeviceBase extends IPSModule
     {
         $SourcesReturn = array();
         $body = $this->_sendCommand("BeoZone/Zone/Sources/", "", "GET");
+        if (@!$body) {
+            return array();
+        }
+
         $js = explode("\n", $body);
         foreach ($js as $j) {
             if ($j[0] == '{') {
@@ -142,6 +146,10 @@ class BangOlufsenDeviceBase extends IPSModule
     protected function _getVolume()
     {
         $body = $this->_sendCommand("BeoZone/Zone/Sound/Volume", "", "GET");
+        if (@!$body) {
+            return array();
+        }
+
         $js = explode("\n", $body);
         foreach ($js as $j) {
             if ($j[0] == '{') {
