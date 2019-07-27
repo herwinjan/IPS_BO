@@ -103,27 +103,8 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
         $this->RegisterMessage($data['ConnectionID'], 10505);
 
         if (strlen($this->ReadPropertyString('IP')) > 0) {
-            $this->Sources = $this->_getSources();
+            $this->_requestSources();
 
-            if (IPS_VariableProfileExists("Sources.BEO." . $this->serial)) {
-                IPS_DeleteVariableProfile("Sources.BEO." . $this->serial);
-            }
-
-            IPS_CreateVariableProfile("Sources.BEO." . $this->serial, 1);
-            if (@$this->Sources) {
-                foreach ($this->Sources as $source) {
-                    $this->SendDebug(__FUNCTION__, "Add Profile ({$source["id"]}) " . $source["name"], 0);
-                    IPS_SetVariableProfileAssociation("Sources.BEO." . $this->serial, $source["count"], $source["name"], "", -1);
-                }
-            }
-
-            $this->EnableAction("BEOSources");
-            //$this->__SetVariable("BEOSources",1,1);
-
-            $id = $this->_CreateVariable("Sources", 1, 0, "BEOSources", $this->InstanceID);
-            IPS_SetVariableCustomProfile($id, "Sources.BEO." . $this->serial);
-
-            //$this->getDevice();
             $this->_getActiveSources();
             $this->_getVolume();
             parent::ApplyChanges();
@@ -243,6 +224,8 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
                 $JSON['Buffer'] = utf8_encode($sendData);
                 $JsonString = json_encode($JSON);
                 $this->SendDataToParent($JsonString);
+
+                $this->_requestSources();
             }
             if ($Data[0] == 200) {
                 $this->_setNewValue("BEOStatus", 3);
@@ -363,6 +346,30 @@ class BangOlufsenDevice extends BangOlufsenDeviceBase
                 }
 
             }
+        }
+    }
+    protected function _requestSources()
+    {
+        if (strlen($this->ReadPropertyString('IP')) > 0) {
+            $this->Sources = $this->_getSources();
+
+            if (IPS_VariableProfileExists("Sources.BEO." . $this->serial)) {
+                IPS_DeleteVariableProfile("Sources.BEO." . $this->serial);
+            }
+
+            IPS_CreateVariableProfile("Sources.BEO." . $this->serial, 1);
+            if (@$this->Sources) {
+                foreach ($this->Sources as $source) {
+                    $this->SendDebug(__FUNCTION__, "Add Profile ({$source["id"]}) " . $source["name"], 0);
+                    IPS_SetVariableProfileAssociation("Sources.BEO." . $this->serial, $source["count"], $source["name"], "", -1);
+                }
+            }
+
+            $this->EnableAction("BEOSources");
+            //$this->__SetVariable("BEOSources",1,1);
+
+            $id = $this->_CreateVariable("Sources", 1, 0, "BEOSources", $this->InstanceID);
+            IPS_SetVariableCustomProfile($id, "Sources.BEO." . $this->serial);
         }
     }
 
