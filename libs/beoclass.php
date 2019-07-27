@@ -425,6 +425,7 @@ class BangOlufsenDeviceBase extends IPSModule
             $options = socket_set_option($sock, 1, 6, true);
             if ($options >= 0) {
                 $e = socket_sendto($sock, $packet, strlen($packet), 0, $broadcast, 9);
+                $this->SendDebug(__FUNCTION__, "WOL: to:" . $mac . " = " . $e, 0);
                 socket_close($sock);
             }
         }
