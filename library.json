@@ -1,13 +1,13 @@
 {
-     "id" :  "{ABC951E2-16B4-4801-9EF7-C4320C7E9C6F}" ,
-     "author" :  "HJ Steehouwer" ,
-     "name" :  "Bang Olufsen Modules" ,
-     "url" :  "" ,
+     "id": "{ABC951E2-16B4-4801-9EF7-C4320C7E9C6F}",
+     "author": "HJ Steehouwer",
+     "name": "Bang Olufsen Modules",
+     "url": "",
      "compatibility": {
           "version": "5.0",
           "date": 1498241677
-      },
-     "version" :  "0.1" ,
-     "build" :  0 ,
-     "date" :  1498241677
+     },
+     "version": "0.5",
+     "build": 0,
+     "date": 1498241677
 }
